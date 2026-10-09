@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>أومني - المحفظة الذهبية</title>
+  <title>أومني - المحفظة المتقدمة</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -24,13 +25,12 @@
       --accent-blue: #3b82f6;
       --accent-green: #10b981;
       --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
       --border-color: rgba(212, 175, 55, 0.2);
       --border-color-light: rgba(212, 175, 55, 0.1);
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
@@ -84,7 +84,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      letter-spacing: -0.5px;
     }
 
     .brand-icon {
@@ -129,22 +128,57 @@
       color: var(--primary-gold);
     }
 
-    .logout-btn {
-      background: linear-gradient(135deg, var(--accent-red), #dc2626);
-      border: none;
-    }
-
-    .logout-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
     .container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 30px 20px;
       position: relative;
       z-index: 1;
+    }
+
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--border-color);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary-gold);
+    }
+
+    .tab-btn.active {
+      color: var(--primary-gold);
+      border-bottom-color: var(--primary-gold);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .balance-card {
@@ -174,10 +208,7 @@
       50% { transform: translate(20px, 20px); }
     }
 
-    .balance-card-content {
-      position: relative;
-      z-index: 2;
-    }
+    .balance-card-content { position: relative; z-index: 2; }
 
     .balance-header {
       display: flex;
@@ -197,9 +228,22 @@
       gap: 8px;
     }
 
-    .balance-label-icon {
-      font-size: 18px;
+    .balance-amount {
+      font-size: 56px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary-gold), #f0d48f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .balance-currency {
+      font-size: 24px;
       color: var(--primary-gold);
+      font-weight: 700;
+      margin-left: 12px;
     }
 
     .balance-status {
@@ -228,40 +272,9 @@
       50% { opacity: 0.5; transform: scale(1.2); }
     }
 
-    .balance-amount {
-      font-size: 56px;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--primary-gold), #f0d48f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 10px;
-      letter-spacing: -1px;
-    }
-
-    .balance-currency {
-      font-size: 24px;
-      color: var(--primary-gold);
-      font-weight: 700;
-      margin-left: 12px;
-    }
-
-    .balance-secondary {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color-light);
-    }
-
-    .secondary-amount {
-      font-weight: 700;
-      color: var(--accent-blue);
-    }
-
     .balance-actions {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 16px;
       margin-top: 30px;
     }
@@ -274,13 +287,15 @@
       border-radius: 14px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 13px;
       transition: all 0.3s ease;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       white-space: nowrap;
+      text-align: center;
     }
 
     .action-btn:hover {
@@ -291,11 +306,7 @@
     }
 
     .action-btn i {
-      font-size: 18px;
-    }
-
-    .stats-section {
-      margin-bottom: 30px;
+      font-size: 24px;
     }
 
     .section-title {
@@ -313,199 +324,44 @@
       color: var(--primary-gold);
     }
 
-    .stats-grid {
+    .grid-2 {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 16px;
       margin-bottom: 30px;
     }
 
-    .stat-card {
+    .card {
       background: linear-gradient(135deg, var(--bg-card-light) 0%, var(--bg-card) 100%);
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 24px;
-      text-align: center;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
     }
 
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .stat-card:hover {
+    .card:hover {
       transform: translateY(-5px);
       border-color: var(--primary-gold);
       box-shadow: 0 12px 32px rgba(212, 175, 55, 0.15);
     }
 
-    .stat-card:hover::before {
-      opacity: 1;
-    }
-
-    .stat-icon {
-      font-size: 32px;
+    .card h3 {
       margin-bottom: 12px;
+      font-size: 16px;
+      color: var(--primary-gold);
     }
 
-    .stat-label {
-      font-size: 13px;
+    .card p {
       color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
+      font-size: 14px;
       margin-bottom: 8px;
     }
 
-    .stat-value {
+    .card-value {
       font-size: 28px;
       font-weight: 900;
       color: var(--primary-gold);
-      margin-bottom: 8px;
-    }
-
-    .stat-change {
-      font-size: 12px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
-    .stat-change.positive {
-      color: var(--accent-green);
-    }
-
-    .stat-change.negative {
-      color: var(--accent-red);
-    }
-
-    .transactions-section {
-      margin-bottom: 30px;
-    }
-
-    .table-wrapper {
-      background: linear-gradient(135deg, var(--bg-card-light) 0%, var(--bg-card) 100%);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .table-header {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
-      border-bottom: 2px solid var(--border-color);
-      padding: 20px;
-    }
-
-    .table-header-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.03));
-      padding: 16px 20px;
-      text-align: right;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 1px solid var(--border-color-light);
-    }
-
-    td {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-color-light);
-      font-size: 14px;
-    }
-
-    tr:hover {
-      background: rgba(212, 175, 55, 0.05);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .transaction-type {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .transaction-icon {
-      width: 36px;
-      height: 36px;
-      background: rgba(212, 175, 55, 0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    .transaction-description {
-      color: var(--text-secondary);
-      font-size: 13px;
-    }
-
-    .transaction-amount {
-      font-weight: 800;
-      font-size: 15px;
-    }
-
-    .transaction-amount.positive {
-      color: var(--accent-green);
-    }
-
-    .transaction-amount.negative {
-      color: var(--accent-red);
-    }
-
-    .transaction-date {
-      color: var(--text-secondary);
-      font-size: 13px;
-    }
-
-    .transaction-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent-green);
-    }
-
-    .status-indicator {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
+      margin: 12px 0;
     }
 
     .modal {
@@ -518,12 +374,6 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(5px);
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
     }
 
     .modal-content {
@@ -533,24 +383,20 @@
       margin: auto;
       padding: 40px;
       width: 90%;
-      max-width: 500px;
+      max-width: 600px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: slideUp 0.3s ease;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: slideUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     @keyframes slideUp {
-      from {
-        transform: translate(-50%, -45%);
-        opacity: 0;
-      }
-      to {
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
+      from { transform: translate(-50%, -45%); opacity: 0; }
+      to { transform: translate(-50%, -50%); opacity: 1; }
     }
 
     .modal-header {
@@ -640,84 +486,119 @@
       box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
     }
 
-    .submit-btn:active {
-      transform: translateY(0);
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .nfc-status {
+      padding: 12px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      color: var(--accent-blue);
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .feature-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-gold);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .deal-card {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .deal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .deal-title {
+      font-weight: 700;
+      color: var(--primary-gold);
+    }
+
+    .deal-badge {
+      background: var(--accent-purple);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .deal-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .deal-detail-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .deal-detail-label {
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .deal-detail-value {
+      color: var(--primary-gold);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .buy-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .buy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
     }
 
     @media (max-width: 768px) {
-      .topbar-inner {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .nav {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .balance-card {
-        padding: 24px;
-      }
-
-      .balance-amount {
-        font-size: 40px;
-      }
-
-      .balance-actions {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .modal-content {
-        width: 95%;
-        padding: 24px;
-      }
-
-      table {
-        font-size: 12px;
-      }
-
-      th, td {
-        padding: 12px 10px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .balance-amount {
-        font-size: 32px;
-      }
-
-      .balance-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .action-btn {
-        font-size: 13px;
-        padding: 12px 16px;
-      }
-
-      table {
-        font-size: 11px;
-      }
-
-      th, td {
-        padding: 10px 8px;
-      }
-
-      .transaction-type {
-        font-size: 12px;
-      }
+      .balance-amount { font-size: 40px; }
+      .balance-actions { grid-template-columns: 1fr 1fr; }
+      .modal-content { width: 95%; padding: 24px; }
+      .deal-details { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <!-- شريط التنقل -->
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -734,28 +615,32 @@
         <a href="games.html" class="nav-btn">
           <i class="fas fa-gamepad"></i> الألعاب
         </a>
-        <button class="nav-btn logout-btn" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        <button class="nav-btn" onclick="openModal('chatModal')" title="تواصل مع الإدارة">
+          <i class="fas fa-comments"></i> الدردشة
+        </button>
+        <button class="nav-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> خروج
         </button>
       </div>
     </div>
   </div>
 
   <div class="container">
+    <!-- البطاقة الرئيسية -->
     <div class="balance-card">
       <div class="balance-card-content">
         <div class="balance-header">
           <div>
             <div class="balance-label">
-              <span class="balance-label-icon">💰</span>
+              <span style="font-size: 18px; color: var(--primary-gold);">💰</span>
               الرصيد الإجمالي
             </div>
             <div style="display: flex; align-items: baseline; margin-top: 12px;">
               <span class="balance-amount" id="balanceAmount">5,250.50</span>
               <span class="balance-currency">OMNI</span>
             </div>
-            <div class="balance-secondary">
-              رصيد الليرة السورية: <span class="secondary-amount" id="sypBalance">78,757.50 SYP</span>
+            <div style="font-size: 14px; color: var(--text-secondary); margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color-light);">
+              الليرة السورية: <span style="color: var(--accent-blue); font-weight: 700;" id="sypBalance">78,757.50 SYP</span>
             </div>
           </div>
           <div class="balance-status">
@@ -765,186 +650,457 @@
         </div>
 
         <div class="balance-actions">
+          <button class="action-btn" onclick="openModal('nfcModal')">
+            <i class="fas fa-mobile-alt"></i> NFC تحويل
+          </button>
+          <button class="action-btn" onclick="openModal('qrModal')">
+            <i class="fas fa-qrcode"></i> كود QR
+          </button>
           <button class="action-btn" onclick="openModal('depositModal')">
-            <i class="fas fa-arrow-down"></i> إيداع أموال
+            <i class="fas fa-arrow-down"></i> إيداع
           </button>
           <button class="action-btn" onclick="openModal('transferModal')">
-            <i class="fas fa-exchange-alt"></i> تحويل أموال
+            <i class="fas fa-exchange-alt"></i> تحويل
           </button>
           <button class="action-btn" onclick="openModal('withdrawModal')">
-            <i class="fas fa-arrow-up"></i> سحب أموال
+            <i class="fas fa-arrow-up"></i> سحب
           </button>
           <button class="action-btn" onclick="openModal('exchangeModal')">
-            <i class="fas fa-sync"></i> صرف العملات
+            <i class="fas fa-sync"></i> صرف
+          </button>
+          <button class="action-btn" onclick="openModal('loanModal')">
+            <i class="fas fa-handshake"></i> قرض
+          </button>
+          <button class="action-btn" onclick="openModal('feeSettingsModal')">
+            <i class="fas fa-sliders-h"></i> الأجور
           </button>
         </div>
       </div>
     </div>
 
-    <div class="stats-section">
+    <!-- التبويبات -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('overview')">📊 نظرة عامة</button>
+      <button class="tab-btn" onclick="switchTab('deals')">📈 صفقات الأسهم</button>
+      <button class="tab-btn" onclick="switchTab('requests')">📋 طلبات القروض</button>
+      <button class="tab-btn" onclick="switchTab('admin')">⚙️ إدارة</button>
+    </div>
+
+    <!-- تبويب النظرة العامة -->
+    <div id="overview" class="tab-content active">
       <h2 class="section-title">
         <span class="section-title-icon">📊</span>
         ملخص الحساب
       </h2>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">💳</div>
-          <div class="stat-label">إجمالي المنفق</div>
-          <div class="stat-value">400.00</div>
-          <div class="stat-change negative">
-            <i class="fas fa-arrow-down"></i> OMNI
-          </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>💳 المنفق</h3>
+          <p>هذا الشهر</p>
+          <div class="card-value" style="color: var(--accent-red);">-400.00</div>
+          <p style="font-size: 12px;">OMNI</p>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon">📥</div>
-          <div class="stat-label">إجمالي المستلم</div>
-          <div class="stat-value">1,100.00</div>
-          <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i> OMNI
-          </div>
+        <div class="card">
+          <h3>📥 المستقبل</h3>
+          <p>هذا الشهر</p>
+          <div class="card-value" style="color: var(--accent-green);">+1,100.00</div>
+          <p style="font-size: 12px;">OMNI</p>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon">🎁</div>
-          <div class="stat-label">عدد المعاملات</div>
-          <div class="stat-value">23</div>
-          <div class="stat-change" style="color: var(--accent-blue);">
-            <i class="fas fa-exchange-alt"></i> عملية
-          </div>
+        <div class="card">
+          <h3>🎁 المعاملات</h3>
+          <p>إجمالي العمليات</p>
+          <div class="card-value">23</div>
+          <p style="font-size: 12px;">عملية</p>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon">📈</div>
-          <div class="stat-label">النمو الشهري</div>
-          <div class="stat-value">+12.5%</div>
-          <div class="stat-change positive">
-            <i class="fas fa-chart-line"></i> تحسن
-          </div>
+        <div class="card">
+          <h3>📈 النمو</h3>
+          <p>هذا الشهر</p>
+          <div class="card-value" style="color: var(--accent-green);">+12.5%</div>
+          <p style="font-size: 12px;">نمو إيجابي</p>
+        </div>
+
+        <div class="card">
+          <h3>💰 الأسهم</h3>
+          <p>قيمة محفظتك</p>
+          <div class="card-value" style="color: var(--accent-purple);">2,850.00</div>
+          <p style="font-size: 12px;">OMNI</p>
+        </div>
+
+        <div class="card">
+          <h3>🏦 القروض</h3>
+          <p>رصيد متاح</p>
+          <div class="card-value">15,000.00</div>
+          <p style="font-size: 12px;">OMNI</p>
         </div>
       </div>
     </div>
 
-    <div class="transactions-section">
-      <div class="table-wrapper">
-        <div class="table-header">
-          <h3 class="table-header-title">
-            <i class="fas fa-history" style="margin-left: 10px; color: var(--primary-gold);"></i>
-            آخر المعاملات
-          </h3>
+    <!-- تبويب الصفقات -->
+    <div id="deals" class="tab-content">
+      <h2 class="section-title">
+        <span class="section-title-icon">📈</span>
+        صفقات الأسهم المتاحة
+      </h2>
+
+      <div class="deal-card">
+        <div class="deal-header">
+          <div class="deal-title">مشروع تطوير المنصة 🏗️</div>
+          <div class="deal-badge">نشطة</div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 12px;">
+          استثمار في تطوير نظام أومني المتقدم
+        </p>
+        <div class="deal-details">
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">سعر السهم</div>
+            <div class="deal-detail-value">100 OMNI</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">نسبة العائد</div>
+            <div class="deal-detail-value">15% سنوي</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">المتبقي</div>
+            <div class="deal-detail-value">5,000 سهم</div>
+          </div>
+        </div>
+        <button class="buy-btn" onclick="openModal('buyStockModal', 'deal1')">
+          <i class="fas fa-shopping-cart"></i> شراء أسهم
+        </button>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-header">
+          <div class="deal-title">صندوق التجارة الإلكترونية 🛒</div>
+          <div class="deal-badge">نشطة</div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 12px;">
+          استثمار في توسيع المتاجر والمنتجات
+        </p>
+        <div class="deal-details">
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">سعر السهم</div>
+            <div class="deal-detail-value">75 OMNI</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">نسبة العائد</div>
+            <div class="deal-detail-value">20% سنوي</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">المتبقي</div>
+            <div class="deal-detail-value">3,200 سهم</div>
+          </div>
+        </div>
+        <button class="buy-btn" onclick="openModal('buyStockModal', 'deal2')">
+          <i class="fas fa-shopping-cart"></i> شراء أسهم
+        </button>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-header">
+          <div class="deal-title">صندوق الألعاب والمكافآت 🎮</div>
+          <div class="deal-badge">نشطة</div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 12px;">
+          استثمار في نظام الألعاب والجوائز
+        </p>
+        <div class="deal-details">
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">سعر السهم</div>
+            <div class="deal-detail-value">50 OMNI</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">نسبة العائد</div>
+            <div class="deal-detail-value">25% سنوي</div>
+          </div>
+          <div class="deal-detail-item">
+            <div class="deal-detail-label">المتبقي</div>
+            <div class="deal-detail-value">10,000 سهم</div>
+          </div>
+        </div>
+        <button class="buy-btn" onclick="openModal('buyStockModal', 'deal3')">
+          <i class="fas fa-shopping-cart"></i> شراء أسهم
+        </button>
+      </div>
+    </div>
+
+    <!-- تبويب طلبات القروض -->
+    <div id="requests" class="tab-content">
+      <h2 class="section-title">
+        <span class="section-title-icon">📋</span>
+        طلبات القروض
+      </h2>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>📑 طلب قرض قيد المراجعة</h3>
+        <p>رقم الطلب: <strong>LN-2024-001</strong></p>
+        <p>المبلغ المطلوب: <strong style="color: var(--accent-blue);">10,000 OMNI</strong></p>
+        <p>الحالة: <strong style="color: var(--accent-blue);">قيد الدراسة</strong></p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--text-secondary);">
+          تم التقديم: 10 يناير 2024
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>✅ قرض موافق عليه</h3>
+        <p>رقم الطلب: <strong>LN-2024-002</strong></p>
+        <p>المبلغ: <strong style="color: var(--accent-green);">5,000 OMNI</strong></p>
+        <p>الحالة: <strong style="color: var(--accent-green);">موافق</strong></p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--text-secondary);">
+          معدل الفائدة: 5% سنوي | مدة السداد: 12 شهر
+        </p>
+      </div>
+
+      <button class="submit-btn" onclick="openModal('loanModal')" style="max-width: 300px;">
+        <i class="fas fa-plus"></i> طلب قرض جديد
+      </button>
+    </div>
+
+    <!-- تبويب الإدارة -->
+    <div id="admin" class="tab-content">
+      <h2 class="section-title">
+        <span class="section-title-icon">⚙️</span>
+        لوحة التحكم (للمسؤولين فقط)
+      </h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>👥 المستخدمين</h3>
+          <div class="card-value">1,245</div>
+          <button class="submit-btn" style="margin-top: 12px; padding: 10px;">إدارة</button>
         </div>
 
-        <table id="transactionsTable">
-          <thead>
-            <tr>
-              <th>نوع المعاملة</th>
-              <th>الوصف</th>
-              <th>المبلغ</th>
-              <th>التاريخ</th>
-              <th>الحالة</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="transaction-type">
-                  <div class="transaction-icon">🛍️</div>
-                  <span>شراء</span>
-                </div>
-                <div class="transaction-description">منتجات من المتجر</div>
-              </td>
-              <td>متجر الأمان</td>
-              <td class="transaction-amount negative">-150.00 OMNI</td>
-              <td class="transaction-date">15 يناير 2024</td>
-              <td>
-                <span class="transaction-status">
-                  <span class="status-indicator"></span>
-                  مكتمل
-                </span>
-              </td>
-            </tr>
+        <div class="card">
+          <h3>💳 الأجور المحصلة</h3>
+          <div class="card-value">25,340.00</div>
+          <p style="font-size: 12px; color: var(--accent-green);">OMNI</p>
+        </div>
 
-            <tr>
-              <td>
-                <div class="transaction-type">
-                  <div class="transaction-icon">💳</div>
-                  <span>إيداع</span>
-                </div>
-                <div class="transaction-description">إيداع أموال</div>
-              </td>
-              <td>عبر البطاقة</td>
-              <td class="transaction-amount positive">+1,000.00 OMNI</td>
-              <td class="transaction-date">14 يناير 2024</td>
-              <td>
-                <span class="transaction-status">
-                  <span class="status-indicator"></span>
-                  مكتمل
-                </span>
-              </td>
-            </tr>
+        <div class="card">
+          <h3>📊 الأسهم المباعة</h3>
+          <div class="card-value">8,500</div>
+          <p style="font-size: 12px;">سهم</p>
+        </div>
 
-            <tr>
-              <td>
-                <div class="transaction-type">
-                  <div class="transaction-icon">🎮</div>
-                  <span>ألعاب</span>
-                </div>
-                <div class="transaction-description">جيم أومني</div>
-              </td>
-              <td>العاب</td>
-              <td class="transaction-amount negative">-50.00 OMNI</td>
-              <td class="transaction-date">13 يناير 2024</td>
-              <td>
-                <span class="transaction-status">
-                  <span class="status-indicator"></span>
-                  مكتمل
-                </span>
-              </td>
-            </tr>
+        <div class="card">
+          <h3>🏦 القروض الممنوحة</h3>
+          <div class="card-value">145,000</div>
+          <p style="font-size: 12px;">OMNI</p>
+        </div>
+      </div>
 
-            <tr>
-              <td>
-                <div class="transaction-type">
-                  <div class="transaction-icon">🎁</div>
-                  <span>مكافأة</span>
-                </div>
-                <div class="transaction-description">مكافأة يومية</div>
-              </td>
-              <td>نظام المكافآت</td>
-              <td class="transaction-amount positive">+100.00 OMNI</td>
-              <td class="transaction-date">12 يناير 2024</td>
-              <td>
-                <span class="transaction-status">
-                  <span class="status-indicator"></span>
-                  مكتمل
-                </span>
-              </td>
-            </tr>
+      <button class="submit-btn" onclick="openModal('feeSettingsModal')" style="margin-top: 20px; max-width: 300px;">
+        <i class="fas fa-sliders-h"></i> تعديل الأجور والرسوم
+      </button>
+      
+      <button class="submit-btn" onclick="openModal('createDealModal')" style="margin-top: 12px; max-width: 300px;">
+        <i class="fas fa-plus"></i> طرح صفقة جديدة
+      </button>
+    </div>
+  </div>
 
-            <tr>
-              <td>
-                <div class="transaction-type">
-                  <div class="transaction-icon">🔄</div>
-                  <span>تحويل</span>
-                </div>
-                <div class="transaction-description">تحويل لمستخدم آخر</div>
-              </td>
-              <td>محمد علي</td>
-              <td class="transaction-amount negative">-200.00 OMNI</td>
-              <td class="transaction-date">11 يناير 2024</td>
-              <td>
-                <span class="transaction-status">
-                  <span class="status-indicator"></span>
-                  مكتمل
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <!-- ===== MODALS ===== -->
+
+  <!-- Modal: تحويل NFC -->
+  <div id="nfcModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📱 تحويل عبر NFC</h2>
+        <button class="close-btn" onclick="closeModal('nfcModal')">&times;</button>
+      </div>
+
+      <div class="nfc-status">
+        <i class="fas fa-info-circle"></i> تقريب هاتفك من الجهاز الآخر لإتمام التحويل
+      </div>
+
+      <form onsubmit="handleNFCTransfer(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">معرّف المستقبل (NFC)</label>
+          <input type="text" class="form-input" placeholder="سيتم الكشف عنه تلقائياً" readonly>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> تحويل عبر NFC
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: كود QR -->
+  <div id="qrModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📲 كود QR للتحويل</h2>
+        <button class="close-btn" onclick="closeModal('qrModal')">&times;</button>
+      </div>
+
+      <form onsubmit="generateQRCode(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input type="number" id="qrAmount" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
+        </div>
+        <button type="submit" class="submit-btn">إنشاء كود QR</button>
+      </form>
+
+      <div id="qrCode" class="qr-container" style="display: none;"></div>
+
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 12px; color: var(--text-secondary);">
+        <p><strong>معرّفك:</strong></p>
+        <p id="userCode" style="font-family: monospace; color: var(--primary-gold); margin-top: 8px; word-break: break-all;">loading...</p>
       </div>
     </div>
   </div>
 
+  <!-- Modal: طلب قرض -->
+  <div id="loanModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🏦 طلب قرض</h2>
+        <button class="close-btn" onclick="closeModal('loanModal')">&times;</button>
+      </div>
+
+      <form onsubmit="handleLoanRequest(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ المطلوب (OMNI)</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="100" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">مدة السداد (بالأشهر)</label>
+          <select class="form-input" required>
+            <option>3 أشهر</option>
+            <option selected>6 أشهر</option>
+            <option>12 شهر</option>
+            <option>24 شهر</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الغرض من القرض</label>
+          <textarea class="form-input" placeholder="اشرح الغرض من القرض" style="height: 80px; resize: none;"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">تقديم الطلب</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: شراء أسهم -->
+  <div id="buyStockModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📈 شراء أسهم</h2>
+        <button class="close-btn" onclick="closeModal('buyStockModal')">&times;</button>
+      </div>
+
+      <form onsubmit="handleBuyStock(event)">
+        <div class="form-group">
+          <label class="form-label">عدد الأسهم</label>
+          <input type="number" class="form-input" placeholder="أدخل العدد" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">التكلفة الإجمالية</label>
+          <input type="text" class="form-input" id="totalCost" readonly>
+        </div>
+        <button type="submit" class="submit-btn">تأكيد الشراء</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: تعديل الأجور -->
+  <div id="feeSettingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">⚙️ إدارة الأجور والرسوم</h2>
+        <button class="close-btn" onclick="closeModal('feeSettingsModal')">&times;</button>
+      </div>
+
+      <form onsubmit="handleFeeSettings(event)">
+        <div class="form-group">
+          <label class="form-label">أجرة التحويل (%)</label>
+          <input type="number" class="form-input" placeholder="أدخل النسبة" step="0.01" value="0.5" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">أجرة الصرف (%)</label>
+          <input type="number" class="form-input" placeholder="أدخل النسبة" step="0.01" value="0.5" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">عمولة المنتجات (%)</label>
+          <input type="number" class="form-input" placeholder="أدخل النسبة" step="0.01" value="5" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">حصة الألعاب (%)</label>
+          <input type="number" class="form-input" placeholder="أدخل النسبة" step="0.01" value="25" required>
+        </div>
+        <button type="submit" class="submit-btn">حفظ التغييرات</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: طرح صفقة جديدة -->
+  <div id="createDealModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📊 طرح صفقة جديدة</h2>
+        <button class="close-btn" onclick="closeModal('createDealModal')">&times;</button>
+      </div>
+
+      <form onsubmit="handleCreateDeal(event)">
+        <div class="form-group">
+          <label class="form-label">اسم الصفقة</label>
+          <input type="text" class="form-input" placeholder="اسم المشروع أو الصفقة" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الوصف</label>
+          <textarea class="form-input" placeholder="اشرح تفاصيل الصفقة" style="height: 80px; resize: none;" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">سعر السهم (OMNI)</label>
+          <input type="number" class="form-input" placeholder="سعر السهم" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">عدد الأسهم المتاحة</label>
+          <input type="number" class="form-input" placeholder="إجمالي الأسهم" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">نسبة العائد السنوي (%)</label>
+          <input type="number" class="form-input" placeholder="النسبة المئوية" step="0.01" min="0" required>
+        </div>
+        <button type="submit" class="submit-btn">طرح الصفقة</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: الدردشة مع الإدارة -->
+  <div id="chatModal" class="modal">
+    <div class="modal-content" style="max-height: 600px;">
+      <div class="modal-header">
+        <h2 class="modal-title">💬 الدردشة مع الإدارة</h2>
+        <button class="close-btn" onclick="closeModal('chatModal')">&times;</button>
+      </div>
+
+      <div id="chatBox" style="height: 300px; overflow-y: auto; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+        <div style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">
+          <i class="fas fa-comments" style="font-size: 32px; margin-bottom: 12px;"></i>
+          <p>ابدأ محادثة مع فريق الإدارة</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleChatMessage(event)">
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="chatInput" class="form-input" placeholder="اكتب رسالتك..." style="margin: 0; flex: 1;">
+          <button type="submit" class="submit-btn" style="width: 120px; margin: 0; padding: 14px;">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modals الأخرى (Deposit, Transfer, Withdraw, Exchange) -->
   <div id="depositModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -978,15 +1134,11 @@
       <form onsubmit="handleTransfer(event)">
         <div class="form-group">
           <label class="form-label">رقم المستقبل أو البريد</label>
-          <input type="text" class="form-input" placeholder="أدخل رقم الهاتف أو البريد الإلكتروني" required>
+          <input type="text" class="form-input" placeholder="أدخل رقم أو بريد" required>
         </div>
         <div class="form-group">
           <label class="form-label">المبلغ (OMNI)</label>
           <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">ملاحظة (اختيارية)</label>
-          <input type="text" class="form-input" placeholder="أضف ملاحظة">
         </div>
         <button type="submit" class="submit-btn">تحويل الآن</button>
       </form>
@@ -1012,10 +1164,6 @@
             <option>تحويل دولي</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">بيانات الحساب</label>
-          <input type="text" class="form-input" placeholder="رقم الحساب أو IBAN" required>
-        </div>
         <button type="submit" class="submit-btn">سحب الآن</button>
       </form>
     </div>
@@ -1030,23 +1178,14 @@
       <form onsubmit="handleExchange(event)">
         <div class="form-group">
           <label class="form-label">من العملة</label>
-          <select class="form-input" id="fromCurrency">
+          <select class="form-input">
             <option value="OMNI">أومني (OMNI)</option>
             <option value="SYP">الليرة السورية (SYP)</option>
-            <option value="USD">الدولار الأمريكي (USD)</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">المبلغ</label>
           <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">إلى العملة</label>
-          <select class="form-input" id="toCurrency">
-            <option value="SYP">الليرة السورية (SYP)</option>
-            <option value="OMNI">أومني (OMNI)</option>
-            <option value="USD">الدولار الأمريكي (USD)</option>
-          </select>
         </div>
         <button type="submit" class="submit-btn">صرف الآن</button>
       </form>
@@ -1055,7 +1194,17 @@
 
   <script src="js/aman-core.js"></script>
   <script>
-    function openModal(modalId) {
+    // إدارة التبويبات
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // إدارة الـ Modals
+    function openModal(modalId, data = null) {
       const modal = document.getElementById(modalId);
       if (modal) {
         modal.style.display = 'block';
@@ -1078,9 +1227,83 @@
       }
     }
 
+    // NFC التحويل
+    function handleNFCTransfer(event) {
+      event.preventDefault();
+      alert('تم تفعيل NFC! قرّب هاتفك من الجهاز الآخر.');
+      closeModal('nfcModal');
+    }
+
+    // QR Code
+    function generateQRCode(event) {
+      event.preventDefault();
+      const amount = document.getElementById('qrAmount').value;
+      const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+      
+      document.getElementById('userCode').textContent = userId;
+      
+      const qrContainer = document.getElementById('qrCode');
+      qrContainer.innerHTML = '';
+      qrContainer.style.display = 'flex';
+      
+      new QRCode(qrContainer, {
+        text: `omni://transfer?amount=${amount}&to=${userId}`,
+        width: 200,
+        height: 200,
+        colorDark: "#d4af37",
+        colorLight: "#0a0e27"
+      });
+    }
+
+    // طلب قرض
+    function handleLoanRequest(event) {
+      event.preventDefault();
+      alert('تم تقديم طلب القرض! سيتم مراجعته من قبل الإدارة.');
+      closeModal('loanModal');
+    }
+
+    // شراء أسهم
+    function handleBuyStock(event) {
+      event.preventDefault();
+      alert('تم تأكيد عملية الشراء! الأسهم أضيفت إلى محفظتك.');
+      closeModal('buyStockModal');
+    }
+
+    // تعديل الأجور
+    function handleFeeSettings(event) {
+      event.preventDefault();
+      alert('تم تحديث إعدادات الأجور بنجاح!');
+      closeModal('feeSettingsModal');
+    }
+
+    // طرح صفقة
+    function handleCreateDeal(event) {
+      event.preventDefault();
+      alert('تم طرح الصفقة الجديدة بنجاح!');
+      closeModal('createDealModal');
+    }
+
+    // الدردشة
+    function handleChatMessage(event) {
+      event.preventDefault();
+      const input = document.getElementById('chatInput');
+      const message = input.value;
+      
+      if (message.trim()) {
+        const chatBox = document.getElementById('chatBox');
+        const msgDiv = document.createElement('div');
+        msgDiv.style.cssText = 'background: var(--accent-blue); padding: 10px; border-radius: 8px; margin-bottom: 8px; text-align: right; color: white;';
+        msgDiv.textContent = message;
+        chatBox.appendChild(msgDiv);
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
+    // عمليات أخرى
     function handleDeposit(event) {
       event.preventDefault();
-      alert('تم إرسال طلب الإيداع بنجاح! سيتم معالجته خلال 24 ساعة.');
+      alert('تم إرسال طلب الإيداع! سيتم معالجته خلال 24 ساعة.');
       closeModal('depositModal');
     }
 
@@ -1092,7 +1315,7 @@
 
     function handleWithdraw(event) {
       event.preventDefault();
-      alert('تم إرسال طلب السحب بنجاح! سيتم معالجته خلال 48 ساعة.');
+      alert('تم إرسال طلب السحب! سيتم معالجته خلال 48 ساعة.');
       closeModal('withdrawModal');
     }
 
@@ -1108,7 +1331,7 @@
       window.location.href = 'index.html';
     }
 
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', function() {
       const user = JSON.parse(localStorage.getItem('omni_user') || 'null');
       const token = localStorage.getItem('omni_token');
 
@@ -1117,19 +1340,7 @@
         return;
       }
 
-      try {
-        const response = await fetch('api.php?route=wallet/balance', {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        const data = await response.json();
-
-        if (data.success) {
-          document.getElementById('balanceAmount').textContent = data.balance_omni.toLocaleString('ar-SA', { minimumFractionDigits: 2 });
-          document.getElementById('sypBalance').textContent = (data.balance_omni * 15000).toLocaleString('ar-SA', { minimumFractionDigits: 2 }) + ' SYP';
-        }
-      } catch (error) {
-        console.log('استخدام البيانات الافتراضية');
-      }
+      document.getElementById('userCode').textContent = user.id || 'user_12345';
     });
   </script>
 </body>
