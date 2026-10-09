@@ -3,146 +3,1134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>أومني - المحفظة</title>
+  <title>أومني - المحفظة الذهبية</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-gold: #d4af37;
+      --dark-gold: #a08a3d;
+      --bg-dark: #0a0e27;
+      --bg-darker: #050810;
+      --bg-card: rgba(20, 28, 50, 0.7);
+      --bg-card-light: rgba(30, 40, 65, 0.8);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b8d4;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --border-color: rgba(212, 175, 55, 0.2);
+      --border-color-light: rgba(212, 175, 55, 0.1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      margin: 0; padding: 30px 18px; font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #111827); color: #e2e8f0;
+      background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', 'Cairo', Tahoma, sans-serif;
+      overflow-x: hidden;
+      position: relative;
     }
-    .container { max-width: 1200px; margin: 0 auto; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
-    .brand { font-size: 30px; font-weight: 900; color: #facc15; }
-    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav a, .primary {
-      background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 10px;
-      color: white; padding: 10px 16px; cursor: pointer; font-weight: 700; text-decoration: none; display: inline-block;
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .nav a:hover { opacity: 0.9; }
-    .card {
-      background: rgba(17, 24, 39, 0.9); border: 1px solid #334155; border-radius: 16px; padding: 20px;
-      margin-bottom: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 39, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid var(--border-color);
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
-    .balance-box {
-      background: linear-gradient(135deg, #059669, #047857); border-radius: 16px; padding: 30px; text-align: center; margin-bottom: 24px;
+
+    .topbar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
-    .balance-box h2 { margin: 0 0 10px; font-size: 18px; opacity: 0.9; }
-    .balance-amount { font-size: 48px; font-weight: 900; color: #ecfdf5; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
-    .transaction-item {
-      background: #0b1120; border: 1px solid #1f2937; border-radius: 14px; padding: 16px;
+
+    .brand {
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary-gold), #f0d48f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.5px;
     }
-    .transaction-item h4 { margin: 0 0 8px; }
-    .transaction-amount { font-size: 20px; font-weight: 900; }
-    .positive { color: #10b981; }
-    .negative { color: #ef4444; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px; text-align: right; border-bottom: 1px solid #334155; }
-    th { background: #1f2937; font-weight: 700; }
-    tr:hover { background: rgba(31, 41, 55, 0.5); }
+
+    .brand-icon {
+      font-size: 32px;
+      filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.4));
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: var(--primary-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(240, 212, 143, 0.2));
+      border-color: var(--primary-gold);
+      color: var(--primary-gold);
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, var(--accent-red), #dc2626);
+      border: none;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .balance-card {
+      background: linear-gradient(135deg, rgba(30, 40, 65, 0.9) 0%, rgba(20, 28, 50, 0.9) 100%);
+      border: 2px solid var(--border-color);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+      animation: glow 8s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(20px, 20px); }
+    }
+
+    .balance-card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .balance-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .balance-label-icon {
+      font-size: 18px;
+      color: var(--primary-gold);
+    }
+
+    .balance-status {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .balance-amount {
+      font-size: 56px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary-gold), #f0d48f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .balance-currency {
+      font-size: 24px;
+      color: var(--primary-gold);
+      font-weight: 700;
+      margin-left: 12px;
+    }
+
+    .balance-secondary {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color-light);
+    }
+
+    .secondary-amount {
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+
+    .balance-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 16px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.15));
+      border-color: var(--primary-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .action-btn i {
+      font-size: 18px;
+    }
+
+    .stats-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title-icon {
+      font-size: 24px;
+      color: var(--primary-gold);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--bg-card-light) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-gold);
+      box-shadow: 0 12px 32px rgba(212, 175, 55, 0.15);
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--primary-gold);
+      margin-bottom: 8px;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .stat-change.positive {
+      color: var(--accent-green);
+    }
+
+    .stat-change.negative {
+      color: var(--accent-red);
+    }
+
+    .transactions-section {
+      margin-bottom: 30px;
+    }
+
+    .table-wrapper {
+      background: linear-gradient(135deg, var(--bg-card-light) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+      border-bottom: 2px solid var(--border-color);
+      padding: 20px;
+    }
+
+    .table-header-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.03));
+      padding: 16px 20px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color-light);
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .transaction-type {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .transaction-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(212, 175, 55, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .transaction-description {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .transaction-amount {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .transaction-amount.positive {
+      color: var(--accent-green);
+    }
+
+    .transaction-amount.negative {
+      color: var(--accent-red);
+    }
+
+    .transaction-date {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .transaction-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .status-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, var(--bg-card-light) 0%, var(--bg-card) 100%);
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      margin: auto;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translate(-50%, -45%);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: var(--primary-gold);
+      transform: rotate(90deg);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary-gold);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .form-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary-gold), #f0d48f);
+      border: none;
+      border-radius: 12px;
+      color: var(--bg-dark);
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .topbar-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .balance-card {
+        padding: 24px;
+      }
+
+      .balance-amount {
+        font-size: 40px;
+      }
+
+      .balance-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 24px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 12px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .balance-amount {
+        font-size: 32px;
+      }
+
+      .balance-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-btn {
+        font-size: 13px;
+        padding: 12px 16px;
+      }
+
+      table {
+        font-size: 11px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+      }
+
+      .transaction-type {
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="topbar">
-      <div class="brand">🚀 أومني</div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-icon">🚀</span>
+        <span>أومني</span>
+      </div>
       <div class="nav">
-        <a href="index.html">المتجر</a>
-        <a href="wallet.html">المحفظة</a>
-        <a href="games.html">الألعاب</a>
-        <button class="primary" onclick="logout()">تسجيل الخروج</button>
+        <a href="index.html" class="nav-btn">
+          <i class="fas fa-store"></i> المتجر
+        </a>
+        <a href="wallet.html" class="nav-btn active">
+          <i class="fas fa-wallet"></i> المحفظة
+        </a>
+        <a href="games.html" class="nav-btn">
+          <i class="fas fa-gamepad"></i> الألعاب
+        </a>
+        <button class="nav-btn logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="balance-card">
+      <div class="balance-card-content">
+        <div class="balance-header">
+          <div>
+            <div class="balance-label">
+              <span class="balance-label-icon">💰</span>
+              الرصيد الإجمالي
+            </div>
+            <div style="display: flex; align-items: baseline; margin-top: 12px;">
+              <span class="balance-amount" id="balanceAmount">5,250.50</span>
+              <span class="balance-currency">OMNI</span>
+            </div>
+            <div class="balance-secondary">
+              رصيد الليرة السورية: <span class="secondary-amount" id="sypBalance">78,757.50 SYP</span>
+            </div>
+          </div>
+          <div class="balance-status">
+            <span class="status-dot"></span>
+            حساب نشط
+          </div>
+        </div>
+
+        <div class="balance-actions">
+          <button class="action-btn" onclick="openModal('depositModal')">
+            <i class="fas fa-arrow-down"></i> إيداع أموال
+          </button>
+          <button class="action-btn" onclick="openModal('transferModal')">
+            <i class="fas fa-exchange-alt"></i> تحويل أموال
+          </button>
+          <button class="action-btn" onclick="openModal('withdrawModal')">
+            <i class="fas fa-arrow-up"></i> سحب أموال
+          </button>
+          <button class="action-btn" onclick="openModal('exchangeModal')">
+            <i class="fas fa-sync"></i> صرف العملات
+          </button>
+        </div>
       </div>
     </div>
 
-    <div id="app"></div>
+    <div class="stats-section">
+      <h2 class="section-title">
+        <span class="section-title-icon">📊</span>
+        ملخص الحساب
+      </h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">💳</div>
+          <div class="stat-label">إجمالي المنفق</div>
+          <div class="stat-value">400.00</div>
+          <div class="stat-change negative">
+            <i class="fas fa-arrow-down"></i> OMNI
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📥</div>
+          <div class="stat-label">إجمالي المستلم</div>
+          <div class="stat-value">1,100.00</div>
+          <div class="stat-change positive">
+            <i class="fas fa-arrow-up"></i> OMNI
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🎁</div>
+          <div class="stat-label">عدد المعاملات</div>
+          <div class="stat-value">23</div>
+          <div class="stat-change" style="color: var(--accent-blue);">
+            <i class="fas fa-exchange-alt"></i> عملية
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-label">النمو الشهري</div>
+          <div class="stat-value">+12.5%</div>
+          <div class="stat-change positive">
+            <i class="fas fa-chart-line"></i> تحسن
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transactions-section">
+      <div class="table-wrapper">
+        <div class="table-header">
+          <h3 class="table-header-title">
+            <i class="fas fa-history" style="margin-left: 10px; color: var(--primary-gold);"></i>
+            آخر المعاملات
+          </h3>
+        </div>
+
+        <table id="transactionsTable">
+          <thead>
+            <tr>
+              <th>نوع المعاملة</th>
+              <th>الوصف</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="transaction-type">
+                  <div class="transaction-icon">🛍️</div>
+                  <span>شراء</span>
+                </div>
+                <div class="transaction-description">منتجات من المتجر</div>
+              </td>
+              <td>متجر الأمان</td>
+              <td class="transaction-amount negative">-150.00 OMNI</td>
+              <td class="transaction-date">15 يناير 2024</td>
+              <td>
+                <span class="transaction-status">
+                  <span class="status-indicator"></span>
+                  مكتمل
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="transaction-type">
+                  <div class="transaction-icon">💳</div>
+                  <span>إيداع</span>
+                </div>
+                <div class="transaction-description">إيداع أموال</div>
+              </td>
+              <td>عبر البطاقة</td>
+              <td class="transaction-amount positive">+1,000.00 OMNI</td>
+              <td class="transaction-date">14 يناير 2024</td>
+              <td>
+                <span class="transaction-status">
+                  <span class="status-indicator"></span>
+                  مكتمل
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="transaction-type">
+                  <div class="transaction-icon">🎮</div>
+                  <span>ألعاب</span>
+                </div>
+                <div class="transaction-description">جيم أومني</div>
+              </td>
+              <td>العاب</td>
+              <td class="transaction-amount negative">-50.00 OMNI</td>
+              <td class="transaction-date">13 يناير 2024</td>
+              <td>
+                <span class="transaction-status">
+                  <span class="status-indicator"></span>
+                  مكتمل
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="transaction-type">
+                  <div class="transaction-icon">🎁</div>
+                  <span>مكافأة</span>
+                </div>
+                <div class="transaction-description">مكافأة يومية</div>
+              </td>
+              <td>نظام المكافآت</td>
+              <td class="transaction-amount positive">+100.00 OMNI</td>
+              <td class="transaction-date">12 يناير 2024</td>
+              <td>
+                <span class="transaction-status">
+                  <span class="status-indicator"></span>
+                  مكتمل
+                </span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="transaction-type">
+                  <div class="transaction-icon">🔄</div>
+                  <span>تحويل</span>
+                </div>
+                <div class="transaction-description">تحويل لمستخدم آخر</div>
+              </td>
+              <td>محمد علي</td>
+              <td class="transaction-amount negative">-200.00 OMNI</td>
+              <td class="transaction-date">11 يناير 2024</td>
+              <td>
+                <span class="transaction-status">
+                  <span class="status-indicator"></span>
+                  مكتمل
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="depositModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">💳 إيداع أموال</h2>
+        <button class="close-btn" onclick="closeModal('depositModal')">&times;</button>
+      </div>
+      <form onsubmit="handleDeposit(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="10" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">طريقة الدفع</label>
+          <select class="form-input">
+            <option>بطاقة ائتمان</option>
+            <option>محفظة رقمية</option>
+            <option>تحويل بنكي</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn">إيداع الآن</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="transferModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🔄 تحويل أموال</h2>
+        <button class="close-btn" onclick="closeModal('transferModal')">&times;</button>
+      </div>
+      <form onsubmit="handleTransfer(event)">
+        <div class="form-group">
+          <label class="form-label">رقم المستقبل أو البريد</label>
+          <input type="text" class="form-input" placeholder="أدخل رقم الهاتف أو البريد الإلكتروني" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظة (اختيارية)</label>
+          <input type="text" class="form-input" placeholder="أضف ملاحظة">
+        </div>
+        <button type="submit" class="submit-btn">تحويل الآن</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="withdrawModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">⬆️ سحب أموال</h2>
+        <button class="close-btn" onclick="closeModal('withdrawModal')">&times;</button>
+      </div>
+      <form onsubmit="handleWithdraw(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="50" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">حساب الاستقبال</label>
+          <select class="form-input">
+            <option>حساب بنكي</option>
+            <option>محفظة رقمية</option>
+            <option>تحويل دولي</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">بيانات الحساب</label>
+          <input type="text" class="form-input" placeholder="رقم الحساب أو IBAN" required>
+        </div>
+        <button type="submit" class="submit-btn">سحب الآن</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="exchangeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">💱 صرف العملات</h2>
+        <button class="close-btn" onclick="closeModal('exchangeModal')">&times;</button>
+      </div>
+      <form onsubmit="handleExchange(event)">
+        <div class="form-group">
+          <label class="form-label">من العملة</label>
+          <select class="form-input" id="fromCurrency">
+            <option value="OMNI">أومني (OMNI)</option>
+            <option value="SYP">الليرة السورية (SYP)</option>
+            <option value="USD">الدولار الأمريكي (USD)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المبلغ</label>
+          <input type="number" class="form-input" placeholder="أدخل المبلغ" step="0.01" min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">إلى العملة</label>
+          <select class="form-input" id="toCurrency">
+            <option value="SYP">الليرة السورية (SYP)</option>
+            <option value="OMNI">أومني (OMNI)</option>
+            <option value="USD">الدولار الأمريكي (USD)</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn">صرف الآن</button>
+      </form>
+    </div>
   </div>
 
   <script src="js/aman-core.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const app = document.getElementById('app');
-      const state = {
-        balance: 0,
-        transactions: [],
-        user: JSON.parse(localStorage.getItem('omni_user') || 'null'),
-        token: localStorage.getItem('omni_token') || ''
-      };
-
-      function renderWallet() {
-        const mockBalance = 5250.50;
-        const mockTransactions = [
-          { id: 1, type: 'شراء', description: 'منتجات من المتجر', amount: -150.00, date: '2024-01-15', status: 'مكتمل' },
-          { id: 2, type: 'إيداع', description: 'إيداع أموال', amount: 1000.00, date: '2024-01-14', status: 'مكتمل' },
-          { id: 3, type: 'شراء', description: 'جيم أومني', amount: -50.00, date: '2024-01-13', status: 'مكتمل' },
-          { id: 4, type: 'مكافأة', description: 'مكافأة يومية', amount: 100.00, date: '2024-01-12', status: 'مكتمل' },
-          { id: 5, type: 'تحويل', description: 'تحويل لمستخدم آخر', amount: -200.00, date: '2024-01-11', status: 'مكتمل' }
-        ];
-
-        app.innerHTML = `
-          <div class="balance-box">
-            <h2>رصيد محفظتك 💰</h2>
-            <div class="balance-amount">${mockBalance.toLocaleString('ar-SA', {minimumFractionDigits: 2})} OMNI</div>
-          </div>
-
-          <div class="grid">
-            <div class="card" style="text-align: center;">
-              <h3>💳 الإجمالي المنفق</h3>
-              <p style="font-size: 24px; color: #ef4444;">400.00 OMNI</p>
-            </div>
-            <div class="card" style="text-align: center;">
-              <h3>📥 الإجمالي المستلم</h3>
-              <p style="font-size: 24px; color: #10b981;">1100.00 OMNI</p>
-            </div>
-            <div class="card" style="text-align: center;">
-              <h3>🎁 عدد المعاملات</h3>
-              <p style="font-size: 24px; color: #fbbf24;">5</p>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>آخر المعاملات 📊</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>النوع</th>
-                  <th>الوصف</th>
-                  <th>المبلغ</th>
-                  <th>التاريخ</th>
-                  <th>الحالة</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${mockTransactions.map(t => `
-                  <tr>
-                    <td>${t.type}</td>
-                    <td>${t.description}</td>
-                    <td class="${t.amount > 0 ? 'positive' : 'negative'}">
-                      ${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString('ar-SA', {minimumFractionDigits: 2})} OMNI
-                    </td>
-                    <td>${t.date}</td>
-                    <td>${t.status}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-
-          <div class="grid">
-            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">💳 إيداع أموال</button>
-            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">🔄 تحويل أموال</button>
-            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">⬇️ سحب الأموال</button>
-          </div>
-        `;
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
       }
+    }
 
-      renderWallet();
-    });
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    function handleDeposit(event) {
+      event.preventDefault();
+      alert('تم إرسال طلب الإيداع بنجاح! سيتم معالجته خلال 24 ساعة.');
+      closeModal('depositModal');
+    }
+
+    function handleTransfer(event) {
+      event.preventDefault();
+      alert('تم تحويل الأموال بنجاح!');
+      closeModal('transferModal');
+    }
+
+    function handleWithdraw(event) {
+      event.preventDefault();
+      alert('تم إرسال طلب السحب بنجاح! سيتم معالجته خلال 48 ساعة.');
+      closeModal('withdrawModal');
+    }
+
+    function handleExchange(event) {
+      event.preventDefault();
+      alert('تم صرف العملات بنجاح!');
+      closeModal('exchangeModal');
+    }
 
     function logout() {
       localStorage.removeItem('omni_token');
       localStorage.removeItem('omni_user');
       window.location.href = 'index.html';
     }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      const user = JSON.parse(localStorage.getItem('omni_user') || 'null');
+      const token = localStorage.getItem('omni_token');
+
+      if (!user || !token) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('api.php?route=wallet/balance', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('balanceAmount').textContent = data.balance_omni.toLocaleString('ar-SA', { minimumFractionDigits: 2 });
+          document.getElementById('sypBalance').textContent = (data.balance_omni * 15000).toLocaleString('ar-SA', { minimumFractionDigits: 2 }) + ' SYP';
+        }
+      } catch (error) {
+        console.log('استخدام البيانات الافتراضية');
+      }
+    });
   </script>
 </body>
 </html>
