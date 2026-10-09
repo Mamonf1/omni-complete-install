@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أومني - الألعاب</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 30px 18px; font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827); color: #e2e8f0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+    .brand { font-size: 30px; font-weight: 900; color: #facc15; }
+    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav a, .primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 10px;
+      color: white; padding: 10px 16px; cursor: pointer; font-weight: 700; text-decoration: none; display: inline-block;
+    }
+    .nav a:hover { opacity: 0.9; }
+    .card {
+      background: rgba(17, 24, 39, 0.9); border: 1px solid #334155; border-radius: 16px; padding: 20px;
+      margin-bottom: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+    .game-card {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed); border: 1px solid #6366f1; border-radius: 14px; 
+      padding: 24px; text-align: center; cursor: pointer; transition: transform 0.3s;
+    }
+    .game-card:hover { transform: translateY(-5px); }
+    .game-icon { font-size: 48px; margin-bottom: 12px; }
+    .game-card h3 { margin: 0 0 8px; font-size: 20px; }
+    .game-prize { color: #fbbf24; font-weight: 900; font-size: 16px; }
+    .game-difficulty { font-size: 12px; opacity: 0.8; margin-top: 8px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .stat-item {
+      background: #0b1120; border: 1px solid #1f2937; border-radius: 10px; padding: 16px; text-align: center;
+    }
+    .stat-value { font-size: 24px; font-weight: 900; color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">🚀 أومني</div>
+      <div class="nav">
+        <a href="index.html">المتجر</a>
+        <a href="wallet.html">المحفظة</a>
+        <a href="games.html">الألعاب</a>
+        <button class="primary" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script src="js/aman-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const app = document.getElementById('app');
+      
+      const games = [
+        {
+          id: 1,
+          name: 'لعبة الحظ',
+          icon: '🎰',
+          prize: '50-500 OMNI',
+          difficulty: 'سهل',
+          description: 'لعبة حظ بسيطة وسريعة'
+        },
+        {
+          id: 2,
+          name: 'الأسئلة والأجوبة',
+          icon: '🧠',
+          prize: '100-1000 OMNI',
+          difficulty: 'متوسط',
+          description: 'أجب على أسئلة وفز بمكافآت'
+        },
+        {
+          id: 3,
+          name: 'السباق السريع',
+          icon: '🏎️',
+          prize: '75-750 OMNI',
+          difficulty: 'متوسط',
+          description: 'لعبة سباق سريعة ومثيرة'
+        },
+        {
+          id: 4,
+          name: 'البحث عن الكنز',
+          icon: '💎',
+          prize: '200-2000 OMNI',
+          difficulty: 'صعب',
+          description: 'ابحث عن الكنوز المخفية'
+        },
+        {
+          id: 5,
+          name: 'الذاكرة والتركيز',
+          icon: '🎯',
+          prize: '80-800 OMNI',
+          difficulty: 'متوسط',
+          description: 'اختبر ذاكرتك وتركيزك'
+        },
+        {
+          id: 6,
+          name: 'تحدي الرياضيات',
+          icon: '🔢',
+          prize: '120-1200 OMNI',
+          difficulty: 'صعب',
+          description: 'حل معادلات رياضية سريعة'
+        }
+      ];
+
+      const mockStats = {
+        played: 47,
+        won: 23,
+        lost: 24,
+        totalEarned: 3250.75
+      };
+
+      function renderGames() {
+        app.innerHTML = `
+          <div class="card">
+            <h2>مرحباً بك في ألعاب أومني 🎮</h2>
+            <p>اختر اللعبة التي تريدها وحاول الفوز بمكافآت مجزية!</p>
+          </div>
+
+          <div class="card">
+            <h3>إحصائيات اللعب 📊</h3>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <h4>🎮 عدد اللعبات</h4>
+                <div class="stat-value">${mockStats.played}</div>
+              </div>
+              <div class="stat-item">
+                <h4>✅ الانتصارات</h4>
+                <div class="stat-value" style="color: #10b981;">${mockStats.won}</div>
+              </div>
+              <div class="stat-item">
+                <h4>❌ الخسائر</h4>
+                <div class="stat-value" style="color: #ef4444;">${mockStats.lost}</div>
+              </div>
+              <div class="stat-item">
+                <h4>💰 المكسب الإجمالي</h4>
+                <div class="stat-value">${mockStats.totalEarned.toLocaleString('ar-SA')}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>الألعاب المتاحة 🎲</h2>
+            <div class="grid">
+              ${games.map(game => `
+                <div class="game-card" onclick="playGame(${game.id})">
+                  <div class="game-icon">${game.icon}</div>
+                  <h3>${game.name}</h3>
+                  <p>${game.description}</p>
+                  <div class="game-prize">🏆 ${game.prize}</div>
+                  <div class="game-difficulty">صعوبة: ${game.difficulty}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>كيفية اللعب 📝</h2>
+            <ul style="line-height: 1.8;">
+              <li>اختر اللعبة التي تريدها من القائمة أعلاه</li>
+              <li>اتبع تعليمات اللعبة بعناية</li>
+              <li>اربح المكافآت عند الفوز باللعبة</li>
+              <li>تابع رصيدك في المحفظة 💰</li>
+              <li>اللعب مسؤولية فردية - العب بحكمة!</li>
+            </ul>
+          </div>
+        `;
+      }
+
+      window.playGame = function(gameId) {
+        const game = games.find(g => g.id === gameId);
+        alert(`سيتم فتح لعبة: ${game.name}\n\nقريباً...`);
+      };
+
+      renderGames();
+    });
+
+    function logout() {
+      localStorage.removeItem('omni_token');
+      localStorage.removeItem('omni_user');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
