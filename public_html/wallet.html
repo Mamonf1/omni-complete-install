@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أومني - المحفظة</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 30px 18px; font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827); color: #e2e8f0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+    .brand { font-size: 30px; font-weight: 900; color: #facc15; }
+    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav a, .primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 10px;
+      color: white; padding: 10px 16px; cursor: pointer; font-weight: 700; text-decoration: none; display: inline-block;
+    }
+    .nav a:hover { opacity: 0.9; }
+    .card {
+      background: rgba(17, 24, 39, 0.9); border: 1px solid #334155; border-radius: 16px; padding: 20px;
+      margin-bottom: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+    }
+    .balance-box {
+      background: linear-gradient(135deg, #059669, #047857); border-radius: 16px; padding: 30px; text-align: center; margin-bottom: 24px;
+    }
+    .balance-box h2 { margin: 0 0 10px; font-size: 18px; opacity: 0.9; }
+    .balance-amount { font-size: 48px; font-weight: 900; color: #ecfdf5; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 18px; }
+    .transaction-item {
+      background: #0b1120; border: 1px solid #1f2937; border-radius: 14px; padding: 16px;
+    }
+    .transaction-item h4 { margin: 0 0 8px; }
+    .transaction-amount { font-size: 20px; font-weight: 900; }
+    .positive { color: #10b981; }
+    .negative { color: #ef4444; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: right; border-bottom: 1px solid #334155; }
+    th { background: #1f2937; font-weight: 700; }
+    tr:hover { background: rgba(31, 41, 55, 0.5); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">🚀 أومني</div>
+      <div class="nav">
+        <a href="index.html">المتجر</a>
+        <a href="wallet.html">المحفظة</a>
+        <a href="games.html">الألعاب</a>
+        <button class="primary" onclick="logout()">تسجيل الخروج</button>
+      </div>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script src="js/aman-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const app = document.getElementById('app');
+      const state = {
+        balance: 0,
+        transactions: [],
+        user: JSON.parse(localStorage.getItem('omni_user') || 'null'),
+        token: localStorage.getItem('omni_token') || ''
+      };
+
+      function renderWallet() {
+        const mockBalance = 5250.50;
+        const mockTransactions = [
+          { id: 1, type: 'شراء', description: 'منتجات من المتجر', amount: -150.00, date: '2024-01-15', status: 'مكتمل' },
+          { id: 2, type: 'إيداع', description: 'إيداع أموال', amount: 1000.00, date: '2024-01-14', status: 'مكتمل' },
+          { id: 3, type: 'شراء', description: 'جيم أومني', amount: -50.00, date: '2024-01-13', status: 'مكتمل' },
+          { id: 4, type: 'مكافأة', description: 'مكافأة يومية', amount: 100.00, date: '2024-01-12', status: 'مكتمل' },
+          { id: 5, type: 'تحويل', description: 'تحويل لمستخدم آخر', amount: -200.00, date: '2024-01-11', status: 'مكتمل' }
+        ];
+
+        app.innerHTML = `
+          <div class="balance-box">
+            <h2>رصيد محفظتك 💰</h2>
+            <div class="balance-amount">${mockBalance.toLocaleString('ar-SA', {minimumFractionDigits: 2})} OMNI</div>
+          </div>
+
+          <div class="grid">
+            <div class="card" style="text-align: center;">
+              <h3>💳 الإجمالي المنفق</h3>
+              <p style="font-size: 24px; color: #ef4444;">400.00 OMNI</p>
+            </div>
+            <div class="card" style="text-align: center;">
+              <h3>📥 الإجمالي المستلم</h3>
+              <p style="font-size: 24px; color: #10b981;">1100.00 OMNI</p>
+            </div>
+            <div class="card" style="text-align: center;">
+              <h3>🎁 عدد المعاملات</h3>
+              <p style="font-size: 24px; color: #fbbf24;">5</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>آخر المعاملات 📊</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>النوع</th>
+                  <th>الوصف</th>
+                  <th>المبلغ</th>
+                  <th>التاريخ</th>
+                  <th>الحالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${mockTransactions.map(t => `
+                  <tr>
+                    <td>${t.type}</td>
+                    <td>${t.description}</td>
+                    <td class="${t.amount > 0 ? 'positive' : 'negative'}">
+                      ${t.amount > 0 ? '+' : ''}${t.amount.toLocaleString('ar-SA', {minimumFractionDigits: 2})} OMNI
+                    </td>
+                    <td>${t.date}</td>
+                    <td>${t.status}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid">
+            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">💳 إيداع أموال</button>
+            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">🔄 تحويل أموال</button>
+            <button class="primary" style="padding: 15px; font-size: 16px; width: 100%;">⬇️ سحب الأموال</button>
+          </div>
+        `;
+      }
+
+      renderWallet();
+    });
+
+    function logout() {
+      localStorage.removeItem('omni_token');
+      localStorage.removeItem('omni_user');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
