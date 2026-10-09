@@ -142,7 +142,7 @@
   function renderAuth(state) {
     const isLogin = state.authMode === 'login';
     return `
-      <div class="panel" style="max-width:660px;margin:30px auto;">
+      <div class="panel auth-panel">
         <div class="auth-tabs">
           <button class="tab ${isLogin ? 'active' : ''}" id="toggle-login">تسجيل الدخول</button>
           <button class="tab ${!isLogin ? 'active' : ''}" id="toggle-register">إنشاء حساب</button>

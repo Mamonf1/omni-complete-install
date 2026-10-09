@@ -21,6 +21,7 @@
       --blue: #60a5fa;
       --shadow: 0 12px 34px rgba(0,0,0,.28);
     }
+
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -342,6 +343,10 @@
       min-height: 100px;
       resize: vertical;
     }
+    .auth-panel {
+      max-width: 680px;
+      margin: 32px auto 0;
+    }
     .auth-tabs {
       display: flex;
       gap: 8px;
@@ -479,9 +484,12 @@
         .replace(/'/g, '&#039;');
     }
 
-    function formatMoney(value) {
-      const num = Number(value || 0);
-      return num.toLocaleString('ar-SY') + ' OMNI';
+    function getCartCount() {
+      return state.cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    }
+
+    function saveCart() {
+      window.OmniCore.saveCart(state.cart);
     }
 
     async function loadProducts() {
@@ -489,7 +497,6 @@
         const res = await window.OmniCore.api('products/list', {}, 'GET');
         state.products = res.products || [];
       } catch (error) {
-        console.error(error);
         state.products = [];
       }
     }
@@ -503,18 +510,6 @@
       } catch (error) {
         state.adminStats = null;
       }
-    }
-
-    function saveCart() {
-      window.OmniCore.saveCart(state.cart);
-    }
-
-    function getCartCount() {
-      return state.cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    }
-
-    function getCartTotal() {
-      return state.cart.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
     }
 
     function addToCart(product) {
@@ -673,6 +668,13 @@
         btn.onclick = () => {
           const target = btn.getAttribute('data-view');
           state.view = target;
+          render();
+        };
+      });
+
+      document.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.onclick = () => {
+          state.filter = btn.dataset.filter;
           render();
         };
       });
