@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أومني</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 30px 18px; font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #111827); color: #e2e8f0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .brand { font-size: 30px; font-weight: 900; color: #facc15; }
+    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav button, .primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 10px;
+      color: white; padding: 10px 16px; cursor: pointer; font-weight: 700;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.9); border: 1px solid #334155; border-radius: 16px; padding: 20px;
+      margin-top: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .product, .widget {
+      background: #0b1120; border: 1px solid #1f2937; border-radius: 14px; padding: 16px;
+    }
+    .product h3 { margin: 0 0 8px; }
+    .price { font-size: 22px; color: #fbbf24; font-weight: 900; }
+    .hidden { display: none; }
+    .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    input, select, textarea { padding: 12px 14px; border-radius: 10px; border: 1px solid #334155; background: #020817; color: #e2e8f0; }
+    button { font-family: inherit; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">🚀 أومني</div>
+      <div class="nav">
+        <button data-view="home">الرئيسية</button>
+        <button data-view="products">المنتجات</button>
+        <button data-view="cart">السلة</button>
+        <button data-view="auth">تسجيل الدخول</button>
+      </div>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script src="js/aman-core.js"></script>
+  <script src="js/aman-views.js"></script>
+  <script src="js/aman-admin.js"></script>
+  <script src="js/aman-chat.js"></script>
+  <script src="js/aman-reviews.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const app = document.getElementById('app');
+      const state = {
+        products: [],
+        cart: [],
+        user: JSON.parse(localStorage.getItem('omni_user') || 'null'),
+        token: localStorage.getItem('omni_token') || ''
+      };
+
+      function renderHome() {
+        app.innerHTML = `
+          <div class="card">
+            <h2>مرحباً بك في متجر أومني</h2>
+            <p>أسعار مناسبة، تطبيق متكامل، شات متصل، وتقييمات المنتجات.</p>
+            <button class="primary" onclick="window.omni.showProducts()">عرض المنتجات</button>
+          </div>
+          <div class="grid">
+            <div class="widget"><h3>المنتجات</h3><p>${state.products.length || 0} عنصر</p></div>
+            <div class="widget"><h3>المستخدم</h3><p>${state.user ? state.user.name : 'زائر'}</p></div>
+            <div class="widget"><h3>السلة</h3><p>${state.cart.length} عناصر</p></div>
+          </div>
+        `;
+      }
+
+      function renderProducts() {
+        app.innerHTML = '<div class="card"><h2>المنتجات</h2><div id="products-list"></div></div>';
+        const list = document.getElementById('products-list');
+        if (!state.products.length) {
+          list.innerHTML = '<p>لا توجد منتجات حالياً.</p>';
+          return;
+        }
+        list.innerHTML = state.products.map(product => `
+          <div class="product">
+            <h3>${product.name || product.product_name || 'منتج'}</h3>
+            <div class="price">${Number(product.price || 0).toLocaleString()} OMNI</div>
+            <p>${product.description || ''}</p>
+            <button class="primary" onclick="window.omni.addToCart('${product.id}')">أضف للسلة</button>
+          </div>
+        `).join('');
+      }
+
+      function renderAuth() {
+        app.innerHTML = `
+          <div class="card">
+            <h2>تسجيل الدخول / إنشاء حساب</h2>
+            <div class="form-row">
+              <input id="omni_identifier" placeholder="رقم الهاتف أو البريد" />
+            </div>
+            <div class="form-row">
+              <input id="omni_password" type="password" placeholder="كلمة المرور" />
+            </div>
+            <button class="primary" onclick="window.omni.login()">دخول</button>
+          </div>
+        `;
+      }
+
+      window.omni = {
+        showHome: () => renderHome(),
+        showProducts: async () => {
+          try {
+            const res = await fetch('api.php?route=products/list');
+            const json = await res.json();
+            state.products = json.products || [];
+            renderProducts();
+          } catch (e) {
+            app.innerHTML = '<div class="card"><h2>حدث خطأ</h2><p>' + e.message + '</p></div>';
+          }
+        },
+        addToCart: (id) => {
+          const item = state.products.find(p => p.id === id);
+          if (!item) return;
+          state.cart.push(item);
+          renderHome();
+        },
+        login: async () => {
+          const id = document.getElementById('omni_identifier').value;
+          const pass = document.getElementById('omni_password').value;
+          const res = await fetch('api.php?route=auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier: id, password: pass })
+          });
+          const json = await res.json();
+          if (json.success) {
+            state.user = json.user;
+            state.token = json.token;
+            localStorage.setItem('omni_user', JSON.stringify(json.user));
+            localStorage.setItem('omni_token', json.token);
+            renderHome();
+          } else {
+            alert(json.error || 'خطأ في الدخول');
+          }
+        }
+      };
+
+      document.querySelectorAll('[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.getAttribute('data-view');
+          if (view === 'home') renderHome();
+          if (view === 'products') window.omni.showProducts();
+          if (view === 'auth') renderAuth();
+          if (view === 'cart') app.innerHTML = '<div class="card"><h2>السلة</h2><p>عدد العناصر: ' + state.cart.length + '</p></div>';
+        });
+      });
+
+      renderHome();
+    });
+  </script>
+</body>
+</html>
