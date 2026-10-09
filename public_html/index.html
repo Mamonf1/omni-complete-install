@@ -3,51 +3,452 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>أومني</title>
+  <title>أومني | متجر + محفظة + دعم</title>
   <style>
+    :root {
+      --bg: #07111f;
+      --panel: #0f172a;
+      --panel-2: #111827;
+      --card: #0b1220;
+      --soft: #172033;
+      --line: #243244;
+      --gold: #fbbf24;
+      --gold-2: #f59e0b;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --blue: #60a5fa;
+      --shadow: 0 12px 34px rgba(0,0,0,.28);
+    }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      margin: 0; padding: 30px 18px; font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #0f172a, #111827); color: #e2e8f0;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(180deg, #07111f 0%, #0a1322 100%);
+      color: var(--text);
+      line-height: 1.6;
     }
-    .container { max-width: 1200px; margin: 0 auto; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .brand { font-size: 30px; font-weight: 900; color: #facc15; }
-    .nav { display: flex; gap: 10px; flex-wrap: wrap; }
-    .nav button, .primary {
-      background: linear-gradient(135deg, #f59e0b, #d97706); border: none; border-radius: 10px;
-      color: white; padding: 10px 16px; cursor: pointer; font-weight: 700;
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea {
+      font: inherit;
     }
-    .card {
-      background: rgba(17, 24, 39, 0.9); border: 1px solid #334155; border-radius: 16px; padding: 20px;
-      margin-top: 24px; box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 20px 18px 80px;
     }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-    .product, .widget {
-      background: #0b1120; border: 1px solid #1f2937; border-radius: 14px; padding: 16px;
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(7,17,31,.8);
+      border-bottom: 1px solid var(--line);
     }
-    .product h3 { margin: 0 0 8px; }
-    .price { font-size: 22px; color: #fbbf24; font-weight: 900; }
-    .hidden { display: none; }
-    .form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-    input, select, textarea { padding: 12px 14px; border-radius: 10px; border: 1px solid #334155; background: #020817; color: #e2e8f0; }
-    button { font-family: inherit; }
+    .topbar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: .3px;
+    }
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .nav button, .primary-btn, .secondary-btn, .ghost-btn, .small-btn {
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: .2s ease;
+      font-weight: 800;
+    }
+    .nav button, .secondary-btn, .ghost-btn, .small-btn {
+      background: var(--soft);
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+    }
+    .primary-btn {
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #111827;
+      padding: 12px 18px;
+      box-shadow: 0 10px 20px rgba(251,191,36,.28);
+    }
+    .secondary-btn {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      border: none;
+    }
+    .ghost-btn {
+      background: transparent;
+      color: var(--text);
+    }
+    .small-btn {
+      padding: 9px 12px;
+      font-size: .85rem;
+    }
+    .nav button:hover, .primary-btn:hover, .secondary-btn:hover, .ghost-btn:hover, .small-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+    .hero {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    .hero-panel, .card {
+      background: rgba(15, 23, 42, .9);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+    .hero-panel {
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(251,191,36,.12), rgba(96,165,250,.08), rgba(17,24,39,.9));
+    }
+    .eyebrow {
+      display: inline-block;
+      background: rgba(251,191,36,.11);
+      color: var(--gold);
+      border: 1px solid rgba(251,191,36,.25);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .77rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+    h1, h2, h3, h4, p { margin-top: 0; }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+      max-width: 60ch;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .stat {
+      background: rgba(15, 23, 42, .85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat .num {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+    .stat .label {
+      color: var(--muted);
+      font-size: .8rem;
+      font-weight: 700;
+    }
+    .hero-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .wallet-box, .promo-box {
+      background: linear-gradient(180deg, rgba(15,23,42,1), rgba(11,18,32,1));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .currency-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: #0c1527;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+    .currency-row strong {
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 30px 0 16px;
+      flex-wrap: wrap;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      background: #0d1728;
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .chip.active {
+      background: rgba(251,191,36,.12);
+      border-color: rgba(251,191,36,.5);
+      color: var(--gold);
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+    .product-card {
+      background: linear-gradient(180deg, rgba(11,18,32,1), rgba(15,23,42,.95));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 260px;
+    }
+    .product-emoji {
+      font-size: 2.5rem;
+      background: rgba(255,255,255,.04);
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+    }
+    .product-card h3 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+    .product-card p {
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 0;
+      flex: 1;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .price {
+      color: var(--gold);
+      font-size: 1.4rem;
+      font-weight: 900;
+    }
+    .old-price {
+      color: var(--muted);
+      text-decoration: line-through;
+      font-size: .8rem;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 22px;
+      margin-top: 22px;
+    }
+    .panel {
+      background: rgba(15,23,42,.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(148,163,184,.13);
+    }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-meta { display: flex; flex-direction: column; }
+    .qty-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 10px;
+      background: #0b1322;
+      border: 1px solid var(--line);
+    }
+    .qty-box button {
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 1.2rem;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+    }
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: #091827;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      outline: none;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tab {
+      flex: 1;
+      background: #101c2d;
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: rgba(251,191,36,.12);
+      color: var(--gold);
+      border-color: rgba(251,191,36,.35);
+    }
+    .summary-box {
+      background: rgba(251,191,36,.08);
+      border: 1px solid rgba(251,191,36,.24);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .chat-widget {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      width: min(340px, calc(100vw - 24px));
+      background: rgba(15, 23, 42, .98);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      overflow: hidden;
+      z-index: 40;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-weight: 800;
+    }
+    .chat-body {
+      max-height: 260px;
+      overflow: auto;
+      padding: 12px;
+      background: rgba(9,24,39,.7);
+    }
+    .bubble {
+      max-width: 85%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+    .bubble.user { background: #1d4ed8; margin-right: auto; }
+    .bubble.bot { background: #0b1220; border: 1px solid var(--line); margin-left: auto; }
+    .chat-input {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      background: rgba(9,24,39,.8);
+    }
+    .chat-input input {
+      flex: 1;
+      background: #0c1727;
+    }
+    .hidden { display: none !important; }
+    .muted { color: var(--muted); }
+    .small { font-size: .8rem; }
+    @media (max-width: 950px) {
+      .hero, .layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .topbar-inner { justify-content: center; }
+      .nav { justify-content: center; }
+      .stats { grid-template-columns: repeat(2, minmax(120px,1fr)); }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="topbar">
+  <header class="topbar">
+    <div class="topbar-inner">
       <div class="brand">🚀 أومني</div>
-      <div class="nav">
+      <nav class="nav">
         <button data-view="home">الرئيسية</button>
         <button data-view="products">المنتجات</button>
         <button data-view="cart">السلة</button>
         <button data-view="auth">تسجيل الدخول</button>
-      </div>
+        <button data-view="admin">لوحة الإدارة</button>
+      </nav>
     </div>
+  </header>
 
+  <main class="container">
     <div id="app"></div>
-  </div>
+  </main>
+
+  <div id="chat-widget" class="chat-widget hidden"></div>
 
   <script src="js/aman-core.js"></script>
   <script src="js/aman-views.js"></script>
@@ -55,113 +456,289 @@
   <script src="js/aman-chat.js"></script>
   <script src="js/aman-reviews.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    const state = {
+      view: 'home',
+      products: [],
+      cart: [],
+      user: null,
+      authMode: 'login',
+      filter: 'all',
+      chatMessages: [
+        { sender: 'bot', text: 'مرحباً! أستطيع مساعدتك في المنتجات أو الطلبات.' }
+      ],
+      adminStats: null,
+      reviews: []
+    };
+
+    function escapeHtml(str = '') {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatMoney(value) {
+      const num = Number(value || 0);
+      return num.toLocaleString('ar-SY') + ' OMNI';
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await window.OmniCore.api('products/list', {}, 'GET');
+        state.products = res.products || [];
+      } catch (error) {
+        console.error(error);
+        state.products = [];
+      }
+    }
+
+    async function loadAdminStats() {
+      const user = window.OmniCore.getUser();
+      if (!user || user.role !== 'admin') return;
+      try {
+        const res = await window.OmniCore.api('admin/stats', {}, 'GET');
+        state.adminStats = res.stats || null;
+      } catch (error) {
+        state.adminStats = null;
+      }
+    }
+
+    function saveCart() {
+      window.OmniCore.saveCart(state.cart);
+    }
+
+    function getCartCount() {
+      return state.cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+    }
+
+    function getCartTotal() {
+      return state.cart.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
+    }
+
+    function addToCart(product) {
+      const existing = state.cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        state.cart.push({ ...product, qty: 1 });
+      }
+      saveCart();
+      if (state.view === 'cart') render();
+    }
+
+    function changeQty(id, delta) {
+      const item = state.cart.find(x => x.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        state.cart = state.cart.filter(x => x.id !== id);
+      }
+      saveCart();
+      render();
+    }
+
+    function removeFromCart(id) {
+      state.cart = state.cart.filter(x => x.id !== id);
+      saveCart();
+      render();
+    }
+
+    async function handleAuthSubmit(evt) {
+      evt.preventDefault();
+      const form = evt.target;
+      const payload = {
+        identifier: form.identifier.value,
+        password: form.password.value,
+        name: form.name?.value || '',
+        phone: form.phone?.value || '',
+        email: form.email?.value || '',
+        role: form.role?.value || 'customer'
+      };
+
+      const route = state.authMode === 'login' ? 'auth/login' : 'auth/register';
+      const res = await window.OmniCore.api(route, payload, 'POST');
+
+      if (res.success) {
+        state.user = res.user;
+        window.OmniCore.setUser(res.user);
+        window.OmniCore.setToken(res.token);
+        state.view = 'products';
+        render();
+        return;
+      }
+
+      alert(res.error || 'حدث خطأ غير متوقع');
+    }
+
+    async function submitOrder() {
+      if (!state.user) {
+        state.view = 'auth';
+        render();
+        return;
+      }
+      if (!state.cart.length) {
+        alert('السلة فارغة');
+        return;
+      }
+
+      const payload = {
+        items: state.cart.map(item => ({ id: item.id, quantity: item.qty })),
+        customer_name: state.user.name,
+        customer_phone: state.user.phone,
+        address: 'سوريا',
+        city: 'دمشق',
+        notes: 'تم الطلب من التطبيق'
+      };
+
+      const res = await window.OmniCore.api('orders/create', payload, 'POST');
+      if (res.success) {
+        state.cart = [];
+        saveCart();
+        alert('تمت إضافة الطلب بنجاح! رقم الطلب: ' + res.order_number);
+        state.view = 'products';
+        render();
+      } else {
+        alert(res.error || 'فشل إنشاء الطلب');
+      }
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      state.chatMessages.push({ sender: 'user', text });
+      input.value = '';
+      renderChatWidget();
+
+      const botReply = text.includes('طلب') || text.includes('سلة') ? 'يمكنك التوجه إلى قسم السلة أو المنتجات لإتمام الطلب.' :
+        text.includes('حساب') || text.includes('تسجيل') ? 'يمكنك استخدام زر تسجيل الدخول في أعلى الصفحة.' :
+        'شكراً لك، نحن هنا للمساعدة. يمكنك متابعة الطلبات أو المنتجات.';
+
+      setTimeout(() => {
+        state.chatMessages.push({ sender: 'bot', text: botReply });
+        renderChatWidget();
+      }, 400);
+    }
+
+    function renderChatWidget() {
+      const chatEl = document.getElementById('chat-widget');
+      if (!chatEl) return;
+      const isHidden = chatEl.classList.contains('hidden');
+      if (isHidden) return;
+      chatEl.innerHTML = `
+        <div class="chat-header">
+          <span>💬 الدعم الفوري</span>
+          <button class="ghost-btn small-btn" data-close-chat>إغلاق</button>
+        </div>
+        <div class="chat-body">
+          ${state.chatMessages.map(msg => `
+            <div class="bubble ${msg.sender === 'user' ? 'user' : 'bot'}">${escapeHtml(msg.text)}</div>
+          `).join('')}
+        </div>
+        <div class="chat-input">
+          <input id="chat-input" type="text" placeholder="اكتب رسالتك..." />
+          <button class="primary-btn small-btn" id="send-chat">إرسال</button>
+        </div>
+      `;
+
+      document.getElementById('send-chat').addEventListener('click', sendChatMessage);
+      document.getElementById('chat-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendChatMessage();
+      });
+      document.querySelector('[data-close-chat]').addEventListener('click', () => {
+        chatEl.classList.add('hidden');
+      });
+    }
+
+    function render() {
       const app = document.getElementById('app');
-      const state = {
-        products: [],
-        cart: [],
-        user: JSON.parse(localStorage.getItem('omni_user') || 'null'),
-        token: localStorage.getItem('omni_token') || ''
-      };
+      if (!app) return;
 
-      function renderHome() {
-        app.innerHTML = `
-          <div class="card">
-            <h2>مرحباً بك في متجر أومني</h2>
-            <p>أسعار مناسبة، تطبيق متكامل، شات متصل، وتقييمات المنتجات.</p>
-            <button class="primary" onclick="window.omni.showProducts()">عرض المنتجات</button>
-          </div>
-          <div class="grid">
-            <div class="widget"><h3>المنتجات</h3><p>${state.products.length || 0} عنصر</p></div>
-            <div class="widget"><h3>المستخدم</h3><p>${state.user ? state.user.name : 'زائر'}</p></div>
-            <div class="widget"><h3>السلة</h3><p>${state.cart.length} عناصر</p></div>
-          </div>
-        `;
+      if (state.view === 'home') {
+        app.innerHTML = AmanViews.renderHome(state);
+      } else if (state.view === 'products') {
+        app.innerHTML = AmanViews.renderProducts(state);
+      } else if (state.view === 'cart') {
+        app.innerHTML = AmanViews.renderCart(state);
+      } else if (state.view === 'auth') {
+        app.innerHTML = AmanViews.renderAuth(state);
+      } else if (state.view === 'admin') {
+        app.innerHTML = AmanAdmin.renderAdmin(state);
       }
-
-      function renderProducts() {
-        app.innerHTML = '<div class="card"><h2>المنتجات</h2><div id="products-list"></div></div>';
-        const list = document.getElementById('products-list');
-        if (!state.products.length) {
-          list.innerHTML = '<p>لا توجد منتجات حالياً.</p>';
-          return;
-        }
-        list.innerHTML = state.products.map(product => `
-          <div class="product">
-            <h3>${product.name || product.product_name || 'منتج'}</h3>
-            <div class="price">${Number(product.price || 0).toLocaleString()} OMNI</div>
-            <p>${product.description || ''}</p>
-            <button class="primary" onclick="window.omni.addToCart('${product.id}')">أضف للسلة</button>
-          </div>
-        `).join('');
-      }
-
-      function renderAuth() {
-        app.innerHTML = `
-          <div class="card">
-            <h2>تسجيل الدخول / إنشاء حساب</h2>
-            <div class="form-row">
-              <input id="omni_identifier" placeholder="رقم الهاتف أو البريد" />
-            </div>
-            <div class="form-row">
-              <input id="omni_password" type="password" placeholder="كلمة المرور" />
-            </div>
-            <button class="primary" onclick="window.omni.login()">دخول</button>
-          </div>
-        `;
-      }
-
-      window.omni = {
-        showHome: () => renderHome(),
-        showProducts: async () => {
-          try {
-            const res = await fetch('api.php?route=products/list');
-            const json = await res.json();
-            state.products = json.products || [];
-            renderProducts();
-          } catch (e) {
-            app.innerHTML = '<div class="card"><h2>حدث خطأ</h2><p>' + e.message + '</p></div>';
-          }
-        },
-        addToCart: (id) => {
-          const item = state.products.find(p => p.id === id);
-          if (!item) return;
-          state.cart.push(item);
-          renderHome();
-        },
-        login: async () => {
-          const id = document.getElementById('omni_identifier').value;
-          const pass = document.getElementById('omni_password').value;
-          const res = await fetch('api.php?route=auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identifier: id, password: pass })
-          });
-          const json = await res.json();
-          if (json.success) {
-            state.user = json.user;
-            state.token = json.token;
-            localStorage.setItem('omni_user', JSON.stringify(json.user));
-            localStorage.setItem('omni_token', json.token);
-            renderHome();
-          } else {
-            alert(json.error || 'خطأ في الدخول');
-          }
-        }
-      };
 
       document.querySelectorAll('[data-view]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const view = btn.getAttribute('data-view');
-          if (view === 'home') renderHome();
-          if (view === 'products') window.omni.showProducts();
-          if (view === 'auth') renderAuth();
-          if (view === 'cart') app.innerHTML = '<div class="card"><h2>السلة</h2><p>عدد العناصر: ' + state.cart.length + '</p></div>';
-        });
+        btn.onclick = () => {
+          const target = btn.getAttribute('data-view');
+          state.view = target;
+          render();
+        };
       });
 
-      renderHome();
+      document.querySelectorAll('[data-product-add]').forEach(btn => {
+        btn.addEventListener('click', () => addToCart(state.products.find(p => p.id === btn.dataset.productAdd)));
+      });
+
+      document.querySelectorAll('[data-qty]').forEach(btn => {
+        btn.addEventListener('click', () => changeQty(btn.dataset.qty, Number(btn.dataset.delta || 1)));
+      });
+
+      document.querySelectorAll('[data-remove-cart]').forEach(btn => {
+        btn.addEventListener('click', () => removeFromCart(btn.dataset.removeCart));
+      });
+
+      const orderBtn = document.getElementById('submit-order');
+      if (orderBtn) orderBtn.onclick = submitOrder;
+
+      const authForm = document.getElementById('auth-form');
+      if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
+
+      const toggleLogin = document.getElementById('toggle-login');
+      const toggleRegister = document.getElementById('toggle-register');
+      if (toggleLogin) toggleLogin.onclick = () => { state.authMode = 'login'; render(); };
+      if (toggleRegister) toggleRegister.onclick = () => { state.authMode = 'register'; render(); };
+
+      const chatToggle = document.getElementById('chat-toggle');
+      if (chatToggle) {
+        chatToggle.onclick = () => {
+          const chatEl = document.getElementById('chat-widget');
+          chatEl.classList.toggle('hidden');
+          if (!chatEl.classList.contains('hidden')) renderChatWidget();
+        };
+      }
+
+      const cartCounter = document.getElementById('cart-count');
+      if (cartCounter) cartCounter.textContent = getCartCount();
+
+      const chatWidget = document.getElementById('chat-widget');
+      if (chatWidget) {
+        chatWidget.classList.remove('hidden');
+        renderChatWidget();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      state.user = window.OmniCore.getUser();
+      state.cart = window.OmniCore.getCart();
+      await loadProducts();
+      await loadAdminStats();
+      render();
     });
+
+    window.OmniApp = {
+      state,
+      render,
+      addToCart,
+      removeFromCart,
+      changeQty,
+      submitOrder,
+      loadProducts,
+      loadAdminStats,
+      renderChatWidget,
+      sendChatMessage
+    };
   </script>
 </body>
 </html>

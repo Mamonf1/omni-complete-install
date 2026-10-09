@@ -1,18 +1,15 @@
 (function () {
-  function openChat() {
-    const root = document.getElementById('chat-root');
-    if (!root) return;
-    root.innerHTML = `
-      <div class="chat-box">
-        <h3>الدردشة</h3>
-        <div class="chat-messages">
-          <p>مرحباً، كيف يمكننا مساعدتك؟</p>
+  function renderChat() {
+    return `
+      <div class="panel" style="margin-top:20px;">
+        <h3>الدعم الفوري</h3>
+        <div class="chat-body" style="max-height:300px;">
+          <div class="bubble bot">مرحباً! كيف يمكنني مساعدتك؟</div>
+          <div class="bubble user">أرغب في معرفة منتج معين.</div>
         </div>
-        <input type="text" placeholder="اكتب رسالتك..." />
-        <button>إرسال</button>
       </div>
     `;
   }
 
-  window.AmanChat = { openChat };
+  window.AmanChat = { renderChat };
 })();

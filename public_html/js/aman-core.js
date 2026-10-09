@@ -1,40 +1,73 @@
 (function () {
-  const base = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+  const storage = {
+    token: 'omni_token',
+    user: 'omni_user',
+    cart: 'omni_cart'
+  };
 
-  function apiRequest(route, payload = {}, method = 'POST') {
-    const token = localStorage.getItem('omni_token') || '';
+  function api(route, payload = {}, method = 'POST') {
+    const token = localStorage.getItem(storage.token) || '';
     const headers = { 'Content-Type': 'application/json' };
     if (token) headers.Authorization = 'Bearer ' + token;
 
-    return fetch(base + 'api.php?route=' + route, {
+    const options = {
       method,
-      headers,
-      body: method === 'GET' ? undefined : JSON.stringify(payload)
-    }).then(r => r.json());
+      headers
+    };
+
+    if (method !== 'GET') {
+      options.body = JSON.stringify(payload);
+    }
+
+    return fetch('api.php?route=' + route, options).then(async (res) => {
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return { success: false, error: text || 'حدث خطأ في الخادم' };
+      }
+    });
+  }
+
+  function getUser() {
+    try {
+      return JSON.parse(localStorage.getItem(storage.user) || 'null');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setUser(user) {
+    localStorage.setItem(storage.user, JSON.stringify(user));
+  }
+
+  function getToken() {
+    return localStorage.getItem(storage.token) || '';
+  }
+
+  function setToken(token) {
+    localStorage.setItem(storage.token, token);
+  }
+
+  function getCart() {
+    try {
+      return JSON.parse(localStorage.getItem(storage.cart) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem(storage.cart, JSON.stringify(cart));
   }
 
   window.OmniCore = {
-    api: apiRequest,
-    setToken(token) {
-      localStorage.setItem('omni_token', token);
-    },
-    getToken() {
-      return localStorage.getItem('omni_token') || '';
-    },
-    setUser(user) {
-      localStorage.setItem('omni_user', JSON.stringify(user));
-    },
-    getUser() {
-      try {
-        return JSON.parse(localStorage.getItem('omni_user') || 'null');
-      } catch (e) {
-        return null;
-      }
-    },
-    logout() {
-      localStorage.removeItem('omni_token');
-      localStorage.removeItem('omni_user');
-      window.location.reload();
-    }
+    api,
+    getUser,
+    setUser,
+    getToken,
+    setToken,
+    getCart,
+    saveCart
   };
 })();

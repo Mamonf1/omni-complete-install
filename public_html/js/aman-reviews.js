@@ -1,11 +1,13 @@
 (function () {
-  function renderReviews(productId) {
-    const root = document.getElementById('reviews-root');
-    if (!root) return;
-    root.innerHTML = `
-      <div class="review-box">
+  function renderReviews(productId = null) {
+    const product = productId ? 'المنتج المحدد' : 'هذا المنتج';
+    return `
+      <div class="panel" style="margin-top:18px;">
         <h3>التقييمات</h3>
-        <p>لا توجد تقييمات لهذا المنتج بعد.</p>
+        <div class="summary-box">
+          <strong>${product}</strong>
+          <p class="muted">لا توجد تقييمات بعد، كن أول من يضيف رأيه.</p>
+        </div>
       </div>
     `;
   }
