@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أومني | محفظة OMNI و SYP</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1419;
+      --bg-2: #141a24;
+      --panel: rgba(15, 20, 25, 0.98);
+      --panel-light: rgba(25, 32, 44, 0.95);
+      --line: rgba(212, 175, 55, 0.18);
+      --gold: #f3d17c;
+      --gold-2: #d4af37;
+      --gold-3: #b68d1d;
+      --text: #edf3ff;
+      --muted: #a9b7cb;
+      --blue: #5aa9ff;
+      --green: #34d399;
+      --red: #f87171;
+      --orange: #ff9a56;
+      --shadow: 0 22px 52px rgba(2, 6, 23, 0.48);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,.08), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(90,169,255,.06), transparent 30%),
+        linear-gradient(180deg, #0f1419 0%, #141a24 100%);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    input, select { font: inherit; }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 16px 120px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 20, 25, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      background: linear-gradient(135deg, #f9dc8b, var(--gold-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 0 12px rgba(212,175,55,.25));
+    }
+    .nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--text);
+      padding: 9px 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(243,209,124,.5);
+      background: rgba(212,175,55,.06);
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.05));
+      border-color: rgba(243,209,124,.5);
+      color: var(--gold);
+    }
+
+    .hero {
+      position: relative;
+      margin-top: 12px;
+      background: linear-gradient(135deg, rgba(20, 28, 40, .98), rgba(14,20,30,.96));
+      border-radius: 32px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 32px 24px 28px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -25% auto auto -12%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(212,175,55,.16), transparent 62%);
+      pointer-events: none;
+    }
+    .hero-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-left h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -.06em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #f9dc8b, var(--gold), #fff1bf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-left p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 55ch;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(52,211,153,.08);
+      border: 1px solid rgba(52,211,153,.28);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--green);
+      font-size: .75rem;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+    .status-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px rgba(52,211,153,.8);
+    }
+
+    .balance-container {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .main-wallet-card {
+      background: linear-gradient(135deg, rgba(18, 26, 38, .95), rgba(12,18,28,.96));
+      border: 1.5px solid rgba(212,175,55,.25);
+      border-radius: 24px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+    .main-wallet-card::before {
+      content: "";
+      position: absolute;
+      inset: -50% auto auto -30%;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(212,175,55,.12), transparent 65%);
+      pointer-events: none;
+    }
+    .wallet-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(212,175,55,.12);
+    }
+    .wallet-header-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .wallet-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(212,175,55,.1);
+      border: 1px solid rgba(212,175,55,.25);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .balance-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .balance-amount {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .balance-number {
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -.07em;
+      background: linear-gradient(135deg, #f9dc8b, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    .balance-currency {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 1.2rem;
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .balance-meta {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(212,175,55,.12);
+    }
+    .meta-item {
+      background: rgba(255,255,255,.01);
+      border: 1px solid rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .meta-label {
+      color: var(--muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .meta-value {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--blue);
+    }
+
+    .balance-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .mini-panel {
+      background: linear-gradient(135deg, rgba(20, 28, 38, .95), rgba(14,20,30,.96));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      text-align: center;
+    }
+    .mini-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+    .mini-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .mini-value {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--green);
+    }
+    .mini-value.red { color: var(--red); }
+    .mini-value.blue { color: var(--blue); }
+
+    .quick-actions {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+    }
+    .action-btn {
+      background: linear-gradient(180deg, rgba(25, 35, 49, .98), rgba(14, 22, 32, .95));
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 18px;
+      padding: 16px 10px;
+      cursor: pointer;
+      transition: .2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 100px;
+      box-shadow: 0 12px 24px rgba(2,6,23,.18);
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(243,209,124,.5);
+      box-shadow: 0 16px 32px rgba(212,175,55,.12);
+    }
+    .action-btn i {
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
+    .action-btn span {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .currency-tabs {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .currency-tab {
+      background: linear-gradient(135deg, rgba(20, 28, 38, .98), rgba(14,20,30,.96));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      cursor: pointer;
+      transition: .2s ease;
+      text-align: center;
+    }
+    .currency-tab:hover {
+      border-color: rgba(243,209,124,.5);
+      background: linear-gradient(135deg, rgba(25, 33, 43, .98), rgba(16,22,32,.96));
+    }
+    .currency-tab.active {
+      border-color: rgba(243,209,124,.5);
+      background: linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.06));
+    }
+    .currency-icon {
+      font-size: 2.4rem;
+      margin-bottom: 8px;
+    }
+    .currency-code {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .currency-balance {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #f9dc8b, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section {
+      margin-top: 32px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: -.04em;
+    }
+    .section-kicker {
+      color: var(--orange);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .table-wrap {
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(20, 28, 38, .98), rgba(14,20,30,.96));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: right;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    th {
+      background: rgba(212,175,55,.03);
+      color: var(--muted);
+      font-size: 0.73rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: rgba(212,175,55,.02); }
+    .tx-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(212,175,55,.08);
+      border: 1px solid rgba(212,175,55,.16);
+      font-size: 1.1rem;
+      margin-left: 8px;
+    }
+    .tx-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .tx-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .tx-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .amount-positive { color: var(--green); font-weight: 800; }
+    .amount-negative { color: var(--red); font-weight: 800; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(52,211,153,.08);
+      border: 1px solid rgba(52,211,153,.25);
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .tabbar {
+      display: flex;
+      gap: 8px;
+      margin: 18px 0 20px;
+      overflow-x: auto;
+      flex-wrap: wrap;
+    }
+    .tab {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: .2s ease;
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+    .tab.active {
+      background: linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.06));
+      border-color: rgba(243,209,124,.4);
+      color: var(--gold);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .deal-card {
+      background: linear-gradient(180deg, rgba(20, 28, 38, .98), rgba(14,20,30,.96));
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+    .deal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .deal-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+    .deal-badge {
+      background: rgba(143,124,243,.12);
+      color: #c9c0ff;
+      border: 1px solid rgba(143,124,243,.35);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .deal-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 14px 0 16px;
+    }
+    .deal-box {
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.04);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .deal-box .label {
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: .1em;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .deal-box .value {
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+    .buy-btn {
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #0b1220;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(212,175,55,.22);
+      transition: .2s ease;
+      width: 100%;
+    }
+    .buy-btn:hover { transform: translateY(-1px); }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(5,8,16,.7);
+      backdrop-filter: blur(8px);
+      padding: 20px;
+    }
+    .modal.show { display: block; }
+    .modal-card {
+      position: relative;
+      max-width: 500px;
+      margin: 8vh auto 0;
+      background: linear-gradient(180deg, rgba(20, 28, 38, .98), rgba(14,20,30,.98));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: -.04em;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: .2s ease;
+    }
+    .modal-close:hover { color: var(--text); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+    .form-control {
+      width: 100%;
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 13px;
+      outline: none;
+      transition: .2s ease;
+    }
+    .form-control:focus {
+      border-color: rgba(243,209,124,.5);
+      box-shadow: 0 0 0 3px rgba(243,209,124,.08);
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold-2), var(--gold));
+      color: #0b1220;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(212,175,55,.22);
+      transition: .2s ease;
+    }
+    .submit-btn:hover { transform: translateY(-1px); }
+
+    @media (max-width: 768px) {
+      .balance-container { grid-template-columns: 1fr; }
+      .balance-meta { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: repeat(3, 1fr); }
+      .currency-tabs { grid-template-columns: 1fr; }
+      .deal-meta { grid-template-columns: 1fr; }
+      th, td { padding: 12px 10px; font-size: 0.85rem; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 16px 10px 100px; }
+      .hero { padding: 20px 16px; }
+      .brand { font-size: 1.4rem; }
+      .balance-number { font-size: 2rem; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); }
+      .action-btn { min-height: 80px; }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(212,175,55,.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .text-center { text-align: center; }
+    .text-muted { color: var(--muted); }
+    .text-green { color: var(--green); }
+    .text-red { color: var(--red); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-icon">💰</span>
+        <span>أومني</span>
+      </div>
+      <nav class="nav">
+        <a href="index.html" class="nav-btn"><i class="fas fa-store"></i>المتجر</a>
+        <a href="wallet-v2.html" class="nav-btn active"><i class="fas fa-wallet"></i>المحفظة</a>
+        <a href="games.html" class="nav-btn"><i class="fas fa-gamepad"></i>الألعاب</a>
+        <button class="nav-btn" onclick="alert('سيتم فتح الدردشة')"><i class="fas fa-comments"></i>الدردشة</button>
+        <button class="nav-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i>خروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-row">
+        <div class="hero-left">
+          <h1>أمان كاش 💳</h1>
+          <p>محفظة رقمية آمنة وموثوقة لإدارة أموالك بسهولة</p>
+          <div class="status-pill">
+            <span class="dot"></span>
+            الحساب نشط
+          </div>
+        </div>
+      </div>
+
+      <div class="balance-container">
+        <div class="main-wallet-card">
+          <div class="wallet-header">
+            <span class="wallet-header-title">المحفظة متعددة العملات</span>
+            <span class="wallet-type"><i class="fas fa-certificate"></i> VIP</span>
+          </div>
+
+          <div class="balance-row">
+            <div class="balance-amount">
+              <div class="balance-number" id="omniBalance">1,000,015.00</div>
+              <div class="balance-currency">
+                <span id="omniCode">OMNI</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="balance-meta">
+            <div class="meta-item">
+              <div class="meta-label">معادل بالليرة السورية</div>
+              <div class="meta-value" id="sypValue">50,000.78 SYP</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">رقم الحساب</div>
+              <div class="meta-value" style="color: var(--blue); font-size: 1.1rem;">770391751</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">حالة الحساب</div>
+              <div class="meta-value" style="color: var(--green); font-size: 1.1rem;">نشط</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="balance-mini-grid">
+          <div class="mini-panel">
+            <div class="mini-icon">📊</div>
+            <div class="mini-label">الأداء</div>
+            <div class="mini-value blue">+12.5%</div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-icon">💹</div>
+            <div class="mini-label">الأرباح</div>
+            <div class="mini-value">+1,100 OMNI</div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-icon">💸</div>
+            <div class="mini-label">الإنفاق</div>
+            <div class="mini-value red">-400 OMNI</div>
+          </div>
+          <div class="mini-panel">
+            <div class="mini-icon">🔄</div>
+            <div class="mini-label">المعاملات</div>
+            <div class="mini-value blue">23</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <button class="action-btn" onclick="openModal('recordModal')">
+          <i class="fas fa-list"></i>
+          <span>السجل</span>
+        </button>
+        <button class="action-btn" onclick="openModal('nfcModal')">
+          <i class="fas fa-mobile-alt"></i>
+          <span>NFC</span>
+        </button>
+        <button class="action-btn" onclick="openModal('qrModal')">
+          <i class="fas fa-qrcode"></i>
+          <span>QR</span>
+        </button>
+        <button class="action-btn" onclick="openModal('contactsModal')">
+          <i class="fas fa-users"></i>
+          <span>الأصدقاء</span>
+        </button>
+        <button class="action-btn" onclick="openModal('depositModal')">
+          <i class="fas fa-arrow-down"></i>
+          <span>إيداع</span>
+        </button>
+        <button class="action-btn" onclick="openModal('transferModal')">
+          <i class="fas fa-exchange-alt"></i>
+          <span>تحويل</span>
+        </button>
+        <button class="action-btn" onclick="openModal('withdrawModal')">
+          <i class="fas fa-arrow-up"></i>
+          <span>سحب</span>
+        </button>
+        <button class="action-btn" onclick="openModal('settingsModal')">
+          <i class="fas fa-sliders-h"></i>
+          <span>الإعدادات</span>
+        </button>
+      </div>
+
+      <div class="currency-tabs">
+        <div class="currency-tab active" data-currency="omni" onclick="selectCurrency('omni', this)">
+          <div class="currency-icon">💎</div>
+          <div class="currency-code">OMNI</div>
+          <div class="currency-balance" id="omniDisplay">1,000,015.00</div>
+        </div>
+        <div class="currency-tab" data-currency="syp" onclick="selectCurrency('syp', this)">
+          <div class="currency-icon">🇸🇾</div>
+          <div class="currency-code">SYP</div>
+          <div class="currency-balance" id="sypDisplay">50,000,750.00</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">آخر العمليات</h2>
+        <span class="section-kicker">سجل المعاملات</span>
+      </div>
+
+      <div class="tabbar">
+        <button class="tab active" data-tab="all">الكل</button>
+        <button class="tab" data-tab="income">إيرادات</button>
+        <button class="tab" data-tab="expense">نفقات</button>
+        <button class="tab" data-tab="transfer">تحويلات</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="transactionsTable">
+          <thead>
+            <tr>
+              <th>نوع المعاملة</th>
+              <th>الوصف</th>
+              <th>المبلغ</th>
+              <th>التاريخ</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsBody">
+            <tr>
+              <td class="text-center"><span class="loading"></span></td>
+              <td class="text-center text-muted">جاري التحميل...</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">صفقات وأسهم</h2>
+        <span class="section-kicker">فرص الاستثمار</span>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-header">
+          <div class="deal-title">مشروع تطوير المنصة</div>
+          <div class="deal-badge">نشطة</div>
+        </div>
+        <div class="deal-meta">
+          <div class="deal-box">
+            <div class="label">سعر السهم</div>
+            <div class="value">100 OMNI</div>
+          </div>
+          <div class="deal-box">
+            <div class="label">العائد السنوي</div>
+            <div class="value">15%</div>
+          </div>
+          <div class="deal-box">
+            <div class="label">الأسهم المتبقية</div>
+            <div class="value">5,000</div>
+          </div>
+        </div>
+        <button class="buy-btn">شراء أسهم</button>
+      </div>
+
+      <div class="deal-card">
+        <div class="deal-header">
+          <div class="deal-title">صندوق التجارة الإلكترونية</div>
+          <div class="deal-badge">نشطة</div>
+        </div>
+        <div class="deal-meta">
+          <div class="deal-box">
+            <div class="label">سعر السهم</div>
+            <div class="value">75 OMNI</div>
+          </div>
+          <div class="deal-box">
+            <div class="label">العائد السنوي</div>
+            <div class="value">20%</div>
+          </div>
+          <div class="deal-box">
+            <div class="label">الأسهم المتبقية</div>
+            <div class="value">3,200</div>
+          </div>
+        </div>
+        <button class="buy-btn">شراء أسهم</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="transferModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-exchange-alt" style="color: var(--gold); margin-left: 8px;"></i>تحويل أموال</h3>
+        <button class="modal-close" onclick="closeModal('transferModal')">&times;</button>
+      </div>
+      <form onsubmit="submitTransfer(event)">
+        <div class="form-group">
+          <label class="form-label">المستلم (رقم هاتف أو بريد)</label>
+          <input class="form-control" type="text" id="transferTo" placeholder="أدخل رقم الهاتف أو البريد" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input class="form-control" type="number" id="transferAmount" step="0.01" min="1" placeholder="أدخل المبلغ" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">ملاحظة (اختياري)</label>
+          <input class="form-control" type="text" id="transferNote" placeholder="أضف ملاحظة" />
+        </div>
+        <button class="submit-btn">تأكيد التحويل</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="depositModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-arrow-down" style="color: var(--gold); margin-left: 8px;"></i>إيداع أموال</h3>
+        <button class="modal-close" onclick="closeModal('depositModal')">&times;</button>
+      </div>
+      <form onsubmit="submitDeposit(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input class="form-control" type="number" id="depositAmount" step="0.01" min="1" placeholder="أدخل المبلغ" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">طريقة الإيداع</label>
+          <select class="form-control">
+            <option>بطاقة ائتمان</option>
+            <option>تحويل بنكي</option>
+            <option>محفظة رقمية</option>
+          </select>
+        </div>
+        <button class="submit-btn">متابعة الإيداع</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="withdrawModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-arrow-up" style="color: var(--gold); margin-left: 8px;"></i>سحب أموال</h3>
+        <button class="modal-close" onclick="closeModal('withdrawModal')">&times;</button>
+      </div>
+      <form onsubmit="submitWithdraw(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input class="form-control" type="number" id="withdrawAmount" step="0.01" min="1" placeholder="أدخل المبلغ" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">حساب السحب</label>
+          <select class="form-control">
+            <option>حساب بنكي</option>
+            <option>محفظة رقمية</option>
+            <option>بطاقة</option>
+          </select>
+        </div>
+        <button class="submit-btn">طلب السحب</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="qrModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-qrcode" style="color: var(--gold); margin-left: 8px;"></i>كود QR</h3>
+        <button class="modal-close" onclick="closeModal('qrModal')">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">المبلغ (OMNI)</label>
+        <input class="form-control" id="qrAmount" type="number" step="0.01" min="1" placeholder="أدخل المبلغ" required />
+      </div>
+      <button class="submit-btn" onclick="generateQR()">إنشاء كود QR</button>
+      <div id="qrBox" style="text-align: center; margin-top: 20px; display: none;">
+        <canvas id="qrCanvas" style="max-width: 100%; margin: 0 auto;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="nfcModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-mobile-alt" style="color: var(--gold); margin-left: 8px;"></i>تحويل NFC</h3>
+        <button class="modal-close" onclick="closeModal('nfcModal')">&times;</button>
+      </div>
+      <div style="background: rgba(90,169,255,.08); border: 1px solid rgba(90,169,255,.22); color: var(--blue); border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.85rem; font-weight: 700;">
+        <i class="fas fa-info-circle"></i> قرّب هاتفك من هاتف المستقبل لبدء التحويل
+      </div>
+      <form onsubmit="submitNFC(event)">
+        <div class="form-group">
+          <label class="form-label">المبلغ (OMNI)</label>
+          <input class="form-control" type="number" id="nfcAmount" step="0.01" min="1" placeholder="أدخل المبلغ" required />
+        </div>
+        <button class="submit-btn">تفعيل NFC</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 class="modal-title"><i class="fas fa-cog" style="color: var(--gold); margin-left: 8px;"></i>الإعدادات</h3>
+        <button class="modal-close" onclick="closeModal('settingsModal')">&times;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الإشعارات</label>
+        <input type="checkbox" checked /> تفعيل الإشعارات
+      </div>
+      <div class="form-group">
+        <label class="form-label">الحماية</label>
+        <button class="submit-btn">تغيير كلمة المرور</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الخصوصية</label>
+        <button class="submit-btn">إدارة الخصوصية</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'api.php';
+    let userToken = localStorage.getItem('omni_token');
+    let userData = JSON.parse(localStorage.getItem('omni_user') || '{}');
+
+    function init() {
+      if (!userToken) {
+        window.location.href = 'index.html';
+        return;
+      }
+      loadUserData();
+      loadTransactions();
+    }
+
+    function loadUserData() {
+      fetch(`${API_URL}?route=wallet/balance`, {
+        headers: { 'Authorization': `Bearer ${userToken}` }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          const omni = data.balance_omni || 0;
+          const syp = data.balance_syp || 0;
+          updateBalance(omni, syp);
+        }
+      })
+      .catch(e => console.error('خطأ في تحميل البيانات:', e));
+    }
+
+    function updateBalance(omni, syp) {
+      document.getElementById('omniBalance').textContent = omni.toLocaleString('ar-EG', { minimumFractionDigits: 2 });
+      document.getElementById('omniDisplay').textContent = omni.toLocaleString('ar-EG', { minimumFractionDigits: 2 });
+      document.getElementById('sypDisplay').textContent = syp.toLocaleString('ar-EG', { minimumFractionDigits: 2 });
+      document.getElementById('sypValue').textContent = syp.toLocaleString('ar-EG', { minimumFractionDigits: 2 }) + ' SYP';
+    }
+
+    function loadTransactions() {
+      fetch(`${API_URL}?route=wallet/transactions&limit=10`, {
+        headers: { 'Authorization': `Bearer ${userToken}` }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.transactions)) {
+          displayTransactions(data.transactions);
+        }
+      })
+      .catch(e => console.error('خطأ في تحميل المعاملات:', e));
+    }
+
+    function displayTransactions(transactions) {
+      const tbody = document.getElementById('transactionsBody');
+      if (!transactions.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">لا توجد معاملات</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = transactions.map(tx => `
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+              <div class="tx-info">
+                <div class="tx-title">${tx.title || 'معاملة'}</div>
+                <div class="tx-desc">${tx.type === 'in' ? 'استقبال' : 'إرسال'}</div>
+              </div>
+              <span class="tx-icon">${tx.type === 'in' ? '📥' : '📤'}</span>
+            </div>
+          </td>
+          <td>${tx.title}</td>
+          <td class="${tx.type === 'in' ? 'amount-positive' : 'amount-negative'}">
+            ${tx.type === 'in' ? '+' : '-'} ${Math.abs(tx.amount).toLocaleString('ar-EG', { minimumFractionDigits: 2 })} ${tx.currency}
+          </td>
+          <td>${new Date(tx.created_at).toLocaleDateString('ar-EG')}</td>
+          <td>
+            <span class="status-badge">
+              <span class="dot"></span>
+              مكتمل
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function selectCurrency(currency, element) {
+      document.querySelectorAll('.currency-tab').forEach(e => e.classList.remove('active'));
+      element.classList.add('active');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    function submitTransfer(event) {
+      event.preventDefault();
+      const to = document.getElementById('transferTo').value;
+      const amount = parseFloat(document.getElementById('transferAmount').value);
+      const note = document.getElementById('transferNote').value;
+
+      fetch(`${API_URL}?route=wallet/transfer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`
+        },
+        body: JSON.stringify({ to, amount, note })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          alert('تم التحويل بنجاح!');
+          closeModal('transferModal');
+          loadUserData();
+          loadTransactions();
+        } else {
+          alert('خطأ: ' + (data.error || 'حدث خطأ ما'));
+        }
+      })
+      .catch(e => alert('خطأ في الاتصال'));
+    }
+
+    function submitDeposit(event) {
+      event.preventDefault();
+      alert('سيتم توجيهك لصفحة الإيداع...');
+      closeModal('depositModal');
+    }
+
+    function submitWithdraw(event) {
+      event.preventDefault();
+      alert('تم إرسال طلب السحب!');
+      closeModal('withdrawModal');
+    }
+
+    function submitNFC(event) {
+      event.preventDefault();
+      alert('تفعيل NFC - هذه ميزة قريباً');
+      closeModal('nfcModal');
+    }
+
+    function generateQR() {
+      const amount = document.getElementById('qrAmount').value;
+      if (!amount) {
+        alert('أدخل المبلغ');
+        return;
+      }
+      alert('إنشاء كود QR للمبلغ: ' + amount + ' OMNI');
+    }
+
+    function logout() {
+      if (confirm('هل تريد تسجيل الخروج؟')) {
+        localStorage.removeItem('omni_token');
+        localStorage.removeItem('omni_user');
+        window.location.href = 'index.html';
+      }
+    }
+
+    document.addEventListener('click', function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('show');
+      }
+    });
+
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
